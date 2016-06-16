@@ -1,4 +1,4 @@
-package com.android1.quedemos;
+package com.proyecto.quedemos;
 
 import org.junit.Test;
 
