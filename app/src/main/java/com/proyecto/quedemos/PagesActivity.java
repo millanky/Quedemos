@@ -45,7 +45,7 @@ public class PagesActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
+        //TODO: ponerlo solo cuando estamos en grupos
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +107,7 @@ public class PagesActivity extends AppCompatActivity {
             return fragment;
         }
 
+        //CONTENIDO DE LAS PAGINAS
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -140,6 +141,7 @@ public class PagesActivity extends AppCompatActivity {
             return 3;
         }
 
+        //NOMBRE DE LAS SECCIONES
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {

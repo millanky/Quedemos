@@ -1,6 +1,5 @@
 package com.proyecto.quedemos;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,7 +21,7 @@ import com.squareup.picasso.Picasso;
 public class HomeFragment extends Fragment {
 
     private ImageView profile_pic = null;
-    private TextView tv = null;
+    private TextView name = null;
     private Button logoutButton = null;
     private Profile profile = null;
 
@@ -30,7 +29,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         profile_pic = (ImageView) view.findViewById(R.id.profile_pic);
-        tv = (TextView) view.findViewById(R.id.tv_name);
+        name = (TextView) view.findViewById(R.id.tv_name);
         logoutButton = (Button) view.findViewById(R.id.logout_button);
         return view;
     }
@@ -47,7 +46,7 @@ public class HomeFragment extends Fragment {
             profile = Profile.getCurrentProfile();
         }
 
-        tv.setText("Welcome \n" + profile.getName());
+        name.setText("Welcome \n" + profile.getName());
 
         Picasso.with(getActivity())
                 .load(profile.getProfilePictureUri(400,400).toString())

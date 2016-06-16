@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean isLogued() {
         SharedPreferences prefs = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
         String usuario = prefs.getString("user", "");
-
-        if (usuario.equals("")) {
+        //TODO: cambiar esto
+        if (!usuario.equals("545")) {
             return false;
         } else {
             return true;
@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main_not_logued);
         }
 
+        Toolbar toolbar;
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
     }
 
