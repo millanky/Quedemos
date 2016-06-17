@@ -1,5 +1,6 @@
 package com.proyecto.quedemos;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,7 +20,7 @@ import android.widget.TextView;
 /**
  * Created by Usuario on 14/06/2016.
  */
-public class PagesActivity extends AppCompatActivity {
+public class PagesActivity extends AppCompatActivity  {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 

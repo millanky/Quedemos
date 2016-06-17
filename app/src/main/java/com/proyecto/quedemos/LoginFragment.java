@@ -3,6 +3,7 @@ package com.proyecto.quedemos;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -92,13 +93,16 @@ public class LoginFragment extends Fragment {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.mainContainer, new HomeFragment());
             fragmentTransaction.commit();
-/*
+
+            //Guardo datos de usuario en las shared preferences
             String user = profile.getName().toString();
+            String pictureUri = profile.getProfilePictureUri(20,20).toString();
             SharedPreferences prefs = getActivity().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = prefs.edit();
             edit.putString("user", user);
+            edit.putString("picture", pictureUri);
             Log.d("Usuario",user);
-            edit.commit(); */
+            edit.commit();
         }
     }
 
