@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 22
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.android1.quedemos"
         minSdkVersion 16
@@ -16,6 +17,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+        }
     }
 }
 
@@ -24,7 +28,16 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
+
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
-    compile "com.squareup.picasso:picasso:2.4.0"
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.squareup.picasso:picasso:2.4.0'
+
+//    compile 'com.google.android.gms:play-services-auth:9.0.2'
+//    compile 'pub.devrel:easypermissions:0.1.5'
+//    compile('com.google.api-client:google-api-client-android:1.22.0') {
+//        exclude group: 'org.apache.httpcomponents'
+//    }
+ //   compile('com.google.apis:google-api-services-calendar:v3-rev196-1.22.0') {
+ //       exclude group: 'org.apache.httpcomponents'
+ //   }
 }

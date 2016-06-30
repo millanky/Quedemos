@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.logo);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_main_not_logued);
+        setContentView(R.layout.activity_main);
 
         if (isLogued()) {
             getSupportActionBar().setTitle(user);

@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:context="com.proyecto.quedemos.MainActivity">
 
 
-    <android.support.design.widget.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tabLayout"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorAccent"
-        app:tabIndicatorColor="@android:color/holo_blue_light"
-        app:tabMode="fixed"
-        app:tabGravity="fill"/>
-
-    <android.support.v4.view.ViewPager
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/viewPager"
-        android:layout_below="@+id/tabLayout"
+        android:id="@+id/infoText"
+        android:text="Usuario no identificado"
+        android:paddingTop="20dp"
         android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mainContainer">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/fragment"
+            android:name="com.proyecto.quedemos.LoginFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_login"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

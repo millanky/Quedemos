@@ -39,10 +39,10 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
+/*
         profile_pic = (ImageView) view.findViewById(R.id.profile_pic);
         name = (TextView) view.findViewById(R.id.tv_name);
-        logoutButton = (Button) view.findViewById(R.id.logout_button);
+        logoutButton = (Button) view.findViewById(R.id.logout_button); */
 
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new CustomAdapter(getFragmentManager(), view.getContext()));
@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
         } else {
             profile = Profile.getCurrentProfile();
         }
-
+/*
         name.setText("Welcome \n" + profile.getName());
 
         Picasso.with(getActivity())
@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 logout();
             }
-        });
+        }); */
     }
 
     public void logout() {
@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment {
             //create fragment
             switch (position){
                 case 0:
-                    return new LoginFragment();
+                    return new FragmentCalendar();
                 case 1:
                     return new FragmentGroups();
                 case 2:

@@ -22,7 +22,7 @@
         android:id="@+id/viewPager"
         android:layout_below="@+id/tabLayout"
         android:layout_centerHorizontal="true" />
-
+<!--
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
@@ -46,6 +46,6 @@
         android:layout_below="@+id/profile_pic"
         android:layout_marginTop="10dp"
         android:onClick="logout"
-        android:text="Log out"/>
+        android:text="Log out"/> -->
 
 </RelativeLayout>
