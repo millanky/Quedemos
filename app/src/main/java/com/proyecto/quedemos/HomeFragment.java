@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
     /*********** FRAGMENT PAGER ADAPTER *********/
     private class CustomAdapter extends FragmentPagerAdapter {
 
-        private String fragments[] = {"Mi Calendario", "Grupos", "Ajustes"};
+        private String fragments[] = {"Calendario", "Grupos", "Ajustes"};
 
         public CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
             super(supportFragmentManager);
