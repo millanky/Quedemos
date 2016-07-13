@@ -8,6 +8,10 @@
     <string name="enviar_token">Enviar Token</string>
     <string name="animal_emisor">Soy un perro, da un toque al gato</string>
 
+    <string name="customize">Personalizar</string>
+    <string name="show_dialog">Mostrar diálogo</string>
+    <string name="undo">Deshacer</string>
+
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
     <string name="desc_google_sign_in">Use a Google Sign In credential to authenticate with Firebase.</string>
 
@@ -54,4 +58,5 @@
 
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
+
 </resources>
