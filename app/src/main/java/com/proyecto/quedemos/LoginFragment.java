@@ -32,6 +32,11 @@ public class LoginFragment extends Fragment {
 
     public static final String PARCEL_KEY = "parcel_key";
 
+    public LoginFragment()
+    {
+        setRetainInstance(true);
+    }
+
     private LoginButton loginButton;
 
     FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {

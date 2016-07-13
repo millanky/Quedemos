@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "471775940937",
+    "firebase_url": "https://quedemos-33806.firebaseio.com",
+    "project_id": "quedemos-33806",
+    "storage_bucket": "quedemos-33806.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:471775940937:android:fbd8b430170e6746",
+        "android_client_info": {
+          "package_name": "com.android1.quedemos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "471775940937-o786ul47dllt25fenpnc0fb0115t0snb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android1.quedemos",
+            "certificate_hash": "620272DB07F13BF091A7C34ED6E5E25F6CCF13E4"
+          }
+        },
+        {
+          "client_id": "471775940937-4gsrst016l79peakm4l6febs6c49uhoo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDfgZGZlsrex7K5OqXJCO2fvOuFVlCCmo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471775940937-4gsrst016l79peakm4l6febs6c49uhoo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
