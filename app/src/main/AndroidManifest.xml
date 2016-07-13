@@ -16,11 +16,6 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-        <!--
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        -->
 
 
         <!--
@@ -34,6 +29,7 @@
         </activity>
         -->
 
+        <!--".InicioSesion.ChooserActivity"-->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -46,19 +42,34 @@
             </intent-filter>
         </activity>
 
+        <!-- GOOGLE -->
+        <activity
+            android:name=".InicioSesion.GoogleSignInActivity"
+            android:label="@string/label_google_sign_in" />
+
+
+        <!-- EMAIL -->
+        <activity
+            android:name=".InicioSesion.EmailPasswordActivity"
+            android:label="@string/label_emailpassword"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <!-- FACEBOOK -->
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--
-        ATTENTION: This was auto-generated to add Google Play services to your project for
-             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        -->
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".InicioSesion.FacebookLoginActivity"
+            android:label="@string/label_facebook_login" />
+
+        <!-- NOTIFICATION SERVICES -->
 
         <service android:name=".NotificationService" >
             <intent-filter>
