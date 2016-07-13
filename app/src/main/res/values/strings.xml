@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Quedemos</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hola desde la sección: %1$d</string>
+    <string name="action_settings">Ajustes</string>
     <string name="facebook_app_id">1738672446402477</string>
+    <string name="customize">Personalizar</string>
+    <string name="show_dialog">Mostrar diálogo</string>
+    <string name="undo">Deshacer</string>
+
 </resources>
