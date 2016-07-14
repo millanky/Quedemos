@@ -1,17 +1,21 @@
 package com.proyecto.quedemos;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,20 +42,29 @@ public class FragmentCalendar extends Fragment {
         Calendar cal = Calendar.getInstance();
 
         // Min date is last 7 days
-        cal.add(Calendar.DATE, -7);
+        cal.add(Calendar.DATE, -8);
         Date blueDate = cal.getTime();
+
+        //Fija un día con un evento
+        cal = Calendar.getInstance();
+        cal.set(2016, Calendar.AUGUST, 30);
+        Date blueDate2 = cal.getTime();
+
 
         // Max date is next 7 days
         cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 7);
+        Log.e("DiaInt  ", String.valueOf(Calendar.DATE));
         Date greenDate = cal.getTime();
 
         if (caldroidFragment != null) {
             ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.blue));
             ColorDrawable green = new ColorDrawable(Color.GREEN);
             caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
+            caldroidFragment.setBackgroundDrawableForDate(blue, blueDate2);
             caldroidFragment.setBackgroundDrawableForDate(green, greenDate);
             caldroidFragment.setTextColorForDate(R.color.white, blueDate);
+            caldroidFragment.setTextColorForDate(R.color.white, blueDate2);
             caldroidFragment.setTextColorForDate(R.color.white, greenDate);
         }
     }
@@ -93,30 +106,48 @@ public class FragmentCalendar extends Fragment {
 
             @Override
             public void onSelectDate(Date date, View view) {
-                Toast.makeText(view.getContext(),formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(),formatter.format(date),
+                        //Toast.LENGTH_SHORT).show();
+
+                final EditText txtUrl = new EditText(view.getContext());
+
+                txtUrl.setHint("Evento");
+
+                new AlertDialog.Builder(view.getContext())
+                        .setTitle("Crear evento")
+                        .setMessage("Nombre del evento!")
+                        .setView(txtUrl)
+                        .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                //TODO:GUARDAR EVENTO
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        })
+                        .show();
             }
 
             @Override
             public void onChangeMonth(int month, int year) {
                 String text = "month: " + month + " year: " + year;
-                Toast.makeText(view.getContext(), text,
-                        Toast.LENGTH_SHORT).show();
+               // Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onLongClickDate(Date date, View view) {
-                Toast.makeText(view.getContext(),
+              /*  Toast.makeText(view.getContext(),
                         "Long click " + formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
             }
 
             @Override
             public void onCaldroidViewCreated() {
                 if (caldroidFragment.getLeftArrowButton() != null) {
-                    Toast.makeText(view.getContext(),
+                   /* Toast.makeText(view.getContext(),
                             "Caldroid view is created", Toast.LENGTH_SHORT)
-                            .show();
+                            .show();*/
                 }
             }
 
@@ -129,7 +160,7 @@ public class FragmentCalendar extends Fragment {
 
         final Button customizeButton = (Button) view.findViewById(R.id.customize_button);
 
-        // Customize the calendar
+        // Customize the calendar --> Días seleccionados
         customizeButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -212,6 +243,7 @@ public class FragmentCalendar extends Fragment {
             }
         });
 
+        //---------CALENDARIO EN POPUP
         Button showDialogButton = (Button) view.findViewById(R.id.show_dialog_button);
 
         final Bundle state = savedInstanceState;

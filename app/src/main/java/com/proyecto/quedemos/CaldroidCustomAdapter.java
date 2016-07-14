@@ -102,7 +102,7 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter  {
         }
 
         dia.setText("" + dateTime.getDay());
-        eventos.setText("Hi");
+        eventos.setText("+1");
 
         // Somehow after setBackgroundResource, the padding collapse.
         // This is to recover the padding

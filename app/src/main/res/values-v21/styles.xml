@@ -29,7 +29,7 @@
 
     <style name="CaldroidDefaultDarkCell" parent="CaldroidDefaultCell">
         <item name="android:textColor">@color/cell_text_color_dark</item>
-        <item name="android:background">@drawable/cell_bg_dark</item>
+        <item name="android:background">@color/green</item>
     </style>
 
     <style name="CaldroidDefaultDarkNormalCell" parent="CaldroidDefaultDarkCell">

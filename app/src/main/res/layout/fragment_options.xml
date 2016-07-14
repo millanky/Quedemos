@@ -1,13 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:weightSum="1">
 
-    <TextView
-        android:layout_width="match_parent"
+
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OPCIONES"
-        android:paddingTop="40dp"
-        android:textSize="36sp" />
+        android:id="@+id/imgApariencia"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/apariencia"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/apariencia"
+        android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:layout_above="@+id/imgPermisos"
+        android:layout_toRightOf="@+id/imgApariencia"
+        android:layout_toEndOf="@+id/imgApariencia" />
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgPermisos"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/apariencia"
+        android:layout_below="@+id/imgApariencia"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/permisos"
+        android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:id="@+id/textView2"
+        android:layout_above="@+id/imgFAQ"
+        android:layout_toRightOf="@+id/imgPermisos"
+        android:layout_toEndOf="@+id/imgPermisos" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgFAQ"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/apariencia"
+        android:layout_below="@+id/imgPermisos"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/faq"
+        android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:layout_above="@+id/imgContacto"
+        android:layout_toRightOf="@+id/imgFAQ"
+        android:layout_toEndOf="@+id/imgFAQ" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgContacto"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/apariencia"
+        android:layout_below="@+id/imgFAQ"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/contacto"
+        android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:layout_alignBottom="@+id/imgContacto"
+        android:layout_toRightOf="@+id/imgContacto"
+        android:layout_toEndOf="@+id/imgContacto" />
+
+</RelativeLayout>

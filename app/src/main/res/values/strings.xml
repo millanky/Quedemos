@@ -59,4 +59,9 @@
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
 
+    <string name="apariencia">Apariencia</string>
+    <string name="permisos">Permisos</string>
+    <string name="faq">FAQ</string>
+    <string name="contacto">Contacto</string>
+
 </resources>
