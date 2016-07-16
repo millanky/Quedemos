@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
         profile_pic = (ImageView) view.findViewById(R.id.profile_pic);
         name = (TextView) view.findViewById(R.id.tv_name);
         logoutButton = (Button) view.findViewById(R.id.logout_button);
-/*
+
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new CustomAdapter(getFragmentManager(), view.getContext()));
 

@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -20,6 +25,8 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.proyecto.quedemos.Activities.MainActivity;
 import com.proyecto.quedemos.R;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Usuario on 16/06/2016.
@@ -108,15 +115,17 @@ public class LoginFragment extends Fragment {
             edit.putString("picture", pictureUri);
             edit.commit();
 
-            Intent launchNextActivity;
-            launchNextActivity = new Intent(getActivity(), MainActivity.class);
-            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            getActivity().startActivity(launchNextActivity);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.putExtras(mBundle);
+            getActivity().startActivity(intent);
 
-            //Intent i = new Intent (getActivity(), PagerTabActivity.class);
-            //getActivity().startActivity(i);
+
+        } else {
+            Intent i = new Intent (getActivity(), MainActivity.class);
+            getActivity().startActivity(i);
         }
     }
 

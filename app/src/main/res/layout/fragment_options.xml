@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/imgApariencia"
         android:src="@drawable/apariencia"
-        android:contentDescription="@string/apariencia"/>
+        android:contentDescription="@string/apariencia"
+        android:clickable="true"
+        android:onClick="cambiarApariencia"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +22,9 @@
         android:textSize="32sp"
         android:layout_above="@+id/imgPermisos"
         android:layout_toRightOf="@+id/imgApariencia"
-        android:layout_toEndOf="@+id/imgApariencia" />
+        android:layout_toEndOf="@+id/imgApariencia"
+        android:clickable="true"
+        android:onClick="cambiarApariencia"/>
 
     <ImageView
         android:layout_width="wrap_content"

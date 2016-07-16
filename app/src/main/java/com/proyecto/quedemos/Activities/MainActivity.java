@@ -23,8 +23,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.proyecto.quedemos.R;
 
@@ -34,6 +36,7 @@ import com.proyecto.quedemos.R;
 public class MainActivity extends AppCompatActivity {
 
     private String user;
+    private Profile profile = null;
 
     private final Handler handler = new Handler();
 
@@ -42,15 +45,23 @@ public class MainActivity extends AppCompatActivity {
     private MyPagerAdapter adapter;
 
     private Drawable oldBackground = null;
-    private int currentColor = 0xFF666666;
+    private int currentColor; //0xFF666666;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.q_logo);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            profile = (Profile) bundle.getParcelable(LoginFragment.PARCEL_KEY);
+        } else {
+            profile = Profile.getCurrentProfile();
+        }
 
         if (isLogued()) {
             setContentView(R.layout.custom_view);
@@ -70,11 +81,16 @@ public class MainActivity extends AppCompatActivity {
 
             tabs.setViewPager(pager);
 
+            SharedPreferences prefs = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+            currentColor = prefs.getInt("themeColor", -11443780);
             changeColor(currentColor);
+            tabs.setIndicatorColor(currentColor);
+
         } else {
             setContentView(R.layout.activity_main);
             getSupportActionBar().setTitle("Quedemos!");
         }
+
 
 
 /*
@@ -137,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         currentColor = newColor;
+
+        SharedPreferences prefs = this.getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putInt("themeColor", currentColor);
+        edit.commit();
 
     }
 
@@ -210,6 +231,15 @@ public class MainActivity extends AppCompatActivity {
             //return TabFragment.newInstance(position);
         }
 
+    }
+
+    //-------------- CAMBIAR APARIENCIA ---------
+
+    public void cambiarApariencia (View v) {
+        new MaterialDialog.Builder(this)
+                .title("Elige un color")
+                .customView(R.layout.custom_view, true) //true indica con ScrollView
+                .show();
     }
 
 
