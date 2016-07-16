@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.proyecto.quedemos.SinUso.MainActivity2;
 
 /**
  * Created by MartaMillan on 5/7/16.

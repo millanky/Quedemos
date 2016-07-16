@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
     android:weightSum="1">
 
 
@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imgApariencia"
-        android:src="@drawable/logo"
+        android:src="@drawable/apariencia"
         android:contentDescription="@string/apariencia"/>
     <TextView
         android:layout_width="wrap_content"
@@ -26,9 +26,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imgPermisos"
-        android:src="@drawable/logo"
+        android:src="@drawable/permisos"
         android:contentDescription="@string/apariencia"
-        android:layout_below="@+id/imgApariencia"/>
+        android:layout_below="@+id/imgApariencia"
+        android:layout_marginTop="20dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,9 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imgFAQ"
-        android:src="@drawable/logo"
+        android:src="@drawable/faq"
         android:contentDescription="@string/apariencia"
-        android:layout_below="@+id/imgPermisos"/>
+        android:layout_below="@+id/imgPermisos"
+        android:layout_marginTop="20dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,9 +63,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imgContacto"
-        android:src="@drawable/logo"
+        android:src="@drawable/contacto"
         android:contentDescription="@string/apariencia"
-        android:layout_below="@+id/imgFAQ"/>
+        android:layout_below="@+id/imgFAQ"
+        android:layout_marginTop="20dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

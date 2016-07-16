@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.proyecto.quedemos.SinUso.MainActivity4;
+
 /**
  * Created by Usuario on 14/06/2016.
  */
@@ -22,7 +24,7 @@ public class SplashScreen extends Activity {
                 }catch (InterruptedException e){ //si en esos 3 segundos no se ejecuta
                     e.printStackTrace();
                 }finally { //lanzar la MainActividy, creamos la intencion de lanzarla primero
-                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                    Intent intent = new Intent(SplashScreen.this, MainActivity4.class);
                     startActivity(intent);
                 }
             }

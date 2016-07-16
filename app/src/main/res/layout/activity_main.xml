@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.proyecto.quedemos.MainActivity">
+    tools:context=".SinUso.MainActivity4">
 
 
     <TextView
@@ -21,10 +21,21 @@
         android:layout_height="wrap_content"
         android:id="@+id/mainContainer">
 
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Iniciar sesión con Gmail"
+            android:layout_alignBottom="@+id/fragment"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="109dp" />
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/fragment"
-            android:name="com.proyecto.quedemos.LoginFragment"
+            android:name="com.proyecto.quedemos.Activities.LoginFragment"
+            android:layout_marginTop="200dp"
+            android:layout_marginBottom="200dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_login"
