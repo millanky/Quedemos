@@ -73,12 +73,12 @@
 
         <!-- NOTIFICATION SERVICES -->
 
-        <service android:name=".NotificationService" >
+        <service android:name=".PushNotifications.NotificationService" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".NotificationIDTokenService" >
+        <service android:name=".PushNotifications.NotificationIDTokenService" >
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

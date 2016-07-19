@@ -5,8 +5,11 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +19,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.proyecto.quedemos.Caldroid.CaldroidCustomFragment;
 import com.proyecto.quedemos.R;
+import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -34,6 +40,10 @@ import java.util.Date;
 public class FragmentCalendar extends Fragment {
 
     private boolean undo = false;
+    private View positiveAction;
+    private EditText nombreEvento;
+    private EditText horaIni;
+    private EditText horaFin;
     private CaldroidFragment caldroidFragment;
     private CaldroidFragment dialogCaldroidFragment;
 
@@ -48,7 +58,6 @@ public class FragmentCalendar extends Fragment {
         cal = Calendar.getInstance();
         cal.set(2016, Calendar.AUGUST, 30);
         Date blueDate2 = cal.getTime();
-
 
         // Max date is next 7 days
         cal = Calendar.getInstance();
@@ -112,20 +121,8 @@ public class FragmentCalendar extends Fragment {
 
                 txtUrl.setHint("Evento");
 
-                new AlertDialog.Builder(view.getContext())
-                        .setTitle("Crear evento")
-                        .setMessage("Nombre del evento!")
-                        .setView(txtUrl)
-                        .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                //TODO:GUARDAR EVENTO
-                            }
-                        })
-                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        })
-                        .show();
+                showCustomView();
+
             }
 
             @Override
@@ -296,5 +293,78 @@ public class FragmentCalendar extends Fragment {
             dialogCaldroidFragment.saveStatesToKey(outState,
                     "DIALOG_CALDROID_SAVED_STATE");
         }
+    }
+
+    /*****RECOGER EVENTOS****/
+
+    public void showCustomView() {
+        MaterialDialog dialog = new MaterialDialog.Builder(getContext())
+                .title("NUEVO EVENTO")
+                .customView(R.layout.insertar_evento, true) //true indica con ScrollView
+                //.icon(R.drawable.write)
+                .positiveText("Guardar")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        //TODO:GUARDAR EVENTO
+                        Log.e("EVENTO: ", nombreEvento.getText().toString());
+                        Log.e("EVENTO: ", horaIni.getText().toString());
+                        Log.e("EVENTO: ", horaFin.getText().toString());
+
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                        Calendar cal = Calendar.getInstance();
+                        cal.add(Calendar.DATE, 0);
+                        String formatDate = format.format(cal.getTime());
+
+                        Log.e("DIA", formatDate);
+                        BaseDatosUsuario eventosBD = new BaseDatosUsuario(getContext());
+                        eventosBD.nuevoEvento(nombreEvento.getText().toString(), horaIni.getText().toString(), horaFin.getText().toString(),formatDate);
+                        eventosBD.getEventoPorFecha(formatDate);
+
+                    }
+                })
+                .negativeText("Cancelar")
+                .build();
+
+        positiveAction = dialog.getActionButton(DialogAction.POSITIVE);
+        nombreEvento = (EditText) dialog.getCustomView().findViewById(R.id.nombre);
+        horaIni = (EditText) dialog.getCustomView().findViewById(R.id.editHoraIni);
+        horaFin = (EditText) dialog.getCustomView().findViewById(R.id.editHoraFin);
+
+        nombreEvento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                positiveAction.setEnabled(s.toString().trim().length() > 0);
+            }
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
+        horaIni.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                positiveAction.setEnabled(s.toString().trim().length() > 0);
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        horaFin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                positiveAction.setEnabled(s.toString().trim().length() > 0);
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        dialog.show();
+        positiveAction.setEnabled(false); // disabled by default
     }
 }

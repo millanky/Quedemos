@@ -238,7 +238,8 @@ public class MainActivity extends AppCompatActivity {
     public void cambiarApariencia (View v) {
         new MaterialDialog.Builder(this)
                 .title("Elige un color")
-                .customView(R.layout.custom_view, true) //true indica con ScrollView
+                .customView(R.layout.paleta_colores, true) //true indica con ScrollView
+                .positiveText("Cerrar")
                 .show();
     }
 

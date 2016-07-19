@@ -1,4 +1,4 @@
-package com.proyecto.quedemos;
+package com.proyecto.quedemos.PushNotifications;
 
 import android.util.Log;
 
