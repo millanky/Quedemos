@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -48,40 +49,50 @@ public class FragmentCalendar extends Fragment {
     private CaldroidFragment dialogCaldroidFragment;
 
     private void setCustomResourceForDates() {
-        Calendar cal = Calendar.getInstance();
 
         // Min date is last 7 days
-        cal.add(Calendar.DATE, -8);
-        Date blueDate = cal.getTime();
+        //cal.add(Calendar.DATE, -8);
+        //Date blueDate = cal.getTime();
 
         //Fija un día con un evento
-        cal = Calendar.getInstance();
-        cal.set(2016, Calendar.AUGUST, 30);
-        Date blueDate2 = cal.getTime();
+        //cal = Calendar.getInstance();
+        //cal.set(2016, Calendar.AUGUST, 30);
+        //Date blueDate2 = cal.getTime();
 
         // Max date is next 7 days
-        cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 7);
-        Log.e("DiaInt  ", String.valueOf(Calendar.DATE));
-        Date greenDate = cal.getTime();
+        //cal = Calendar.getInstance();
+        //cal.add(Calendar.DATE, 7);
+        //Log.e("DiaInt  ", String.valueOf(Calendar.DATE));
+        //Date greenDate = cal.getTime();
+
+        Calendar cal = Calendar.getInstance();
+        BaseDatosUsuario eventosBD = new BaseDatosUsuario(getContext());
+        ArrayList<String> diaEventoMes = eventosBD.getEventosMes(String.valueOf(Calendar.getInstance().get(Calendar.MONTH)+1));
+        Date blueDate;
+        ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.blue));
+        //ColorDrawable green = new ColorDrawable(Color.GREEN);
 
         if (caldroidFragment != null) {
-            ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.blue));
-            ColorDrawable green = new ColorDrawable(Color.GREEN);
-            caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
-            caldroidFragment.setBackgroundDrawableForDate(blue, blueDate2);
-            caldroidFragment.setBackgroundDrawableForDate(green, greenDate);
-            caldroidFragment.setTextColorForDate(R.color.white, blueDate);
-            caldroidFragment.setTextColorForDate(R.color.white, blueDate2);
-            caldroidFragment.setTextColorForDate(R.color.white, greenDate);
+            for (String evento : diaEventoMes) {
+                cal.set(Calendar.getInstance().get(Calendar.YEAR),Calendar.getInstance().get(Calendar.MONTH),Integer.parseInt(evento));
+                blueDate = cal.getTime();
+                caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
+                caldroidFragment.setTextColorForDate(R.color.white, blueDate);
+            }
         }
+
+        android.support.v4.app.FragmentTransaction t = getFragmentManager().beginTransaction();
+        t.replace(R.id.cal, caldroidFragment);
+        t.commit();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+        final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+        //TODO: MIRAR UNA FORMA DE REPINTAR LA VISTA
 
         caldroidFragment = new CaldroidCustomFragment();
 
@@ -105,23 +116,19 @@ public class FragmentCalendar extends Fragment {
 
         setCustomResourceForDates();
 
-        android.support.v4.app.FragmentTransaction t = getFragmentManager().beginTransaction();
-        t.replace(R.id.cal, caldroidFragment);
-        t.commit();
-
         // Setup listener
         final CaldroidListener listener = new CaldroidListener() {
 
             @Override
             public void onSelectDate(Date date, View view) {
-                //Toast.makeText(view.getContext(),formatter.format(date),
-                        //Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(),formatter.format(date),
+                        Toast.LENGTH_SHORT).show();
 
-                final EditText txtUrl = new EditText(view.getContext());
+                //final EditText txtUrl = new EditText(view.getContext());
 
-                txtUrl.setHint("Evento");
+               // txtUrl.setHint("Evento");
 
-                showCustomView();
+                showCustomView(formatter.format(date));
 
             }
 
@@ -297,7 +304,10 @@ public class FragmentCalendar extends Fragment {
 
     /*****RECOGER EVENTOS****/
 
-    public void showCustomView() {
+    public void showCustomView(String date) {
+
+        final String[] eventDate = date.split("-");
+
         MaterialDialog dialog = new MaterialDialog.Builder(getContext())
                 .title("NUEVO EVENTO")
                 .customView(R.layout.insertar_evento, true) //true indica con ScrollView
@@ -306,21 +316,15 @@ public class FragmentCalendar extends Fragment {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        //TODO:GUARDAR EVENTO
+                        //GUARDAR EVENTO
                         Log.e("EVENTO: ", nombreEvento.getText().toString());
                         Log.e("EVENTO: ", horaIni.getText().toString());
                         Log.e("EVENTO: ", horaFin.getText().toString());
-
-                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-                        Calendar cal = Calendar.getInstance();
-                        cal.add(Calendar.DATE, 0);
-                        String formatDate = format.format(cal.getTime());
-
-                        Log.e("DIA", formatDate);
+                        Log.e("DIA", eventDate[0]);
                         BaseDatosUsuario eventosBD = new BaseDatosUsuario(getContext());
-                        eventosBD.nuevoEvento(nombreEvento.getText().toString(), horaIni.getText().toString(), horaFin.getText().toString(),formatDate);
-                        eventosBD.getEventoPorFecha(formatDate);
+                        eventosBD.nuevoEvento(nombreEvento.getText().toString(), horaIni.getText().toString(), horaFin.getText().toString(),eventDate);
 
+                        setCustomResourceForDates(); //Actualizar calendario
                     }
                 })
                 .negativeText("Cancelar")

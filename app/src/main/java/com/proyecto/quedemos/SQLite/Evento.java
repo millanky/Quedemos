@@ -8,9 +8,9 @@ public class Evento {
     private String evento;
     private String horaIni;
     private String horaFin;
-    private String diaFecha;
-    private String mesFecha;
-    private String yearFecha;
+    private String ddFecha;
+    private String mmFecha;
+    private String yyyyFecha;
 
     public String getEvento() {
         return evento;

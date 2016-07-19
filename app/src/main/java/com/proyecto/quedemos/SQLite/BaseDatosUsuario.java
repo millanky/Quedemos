@@ -20,7 +20,7 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
     private static final int version = 1;
 
     private static final String tabla = "CREATE TABLE eventos (id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            " nombre TEXT, hora_ini TEXT, hora_fin TEXT, fecha TEXT)";
+            " nombre TEXT, hora_ini TEXT, hora_fin TEXT, dd TEXT, mm TEXT, yyyy TEXT)";
 
     //CONSTRUCTOR
     public BaseDatosUsuario (Context context) {
@@ -35,7 +35,7 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void nuevoEvento(String nombre, String horaIni, String horaFin, String fecha) {
+    public void nuevoEvento(String nombre, String horaIni, String horaFin, String[] fecha) {
         SQLiteDatabase db = getWritableDatabase();
 
         if (db != null) { //si hay algo escrito
@@ -43,22 +43,51 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
             evento.put("nombre", nombre);
             evento.put("hora_ini",horaIni);
             evento.put("hora_fin",horaFin);
-            evento.put("fecha",fecha);
+            evento.put("dd",fecha[0]);
+            evento.put("mm",fecha[1]);
+            evento.put("yyyy",fecha[2]);
             db.insert("eventos", null, evento);
         }
         db.close();
     }
 
-    /*
-    public ArrayList<Evento> getEventosMes(String mes){
+
+    public ArrayList<String> getEventosMes(String mes){
+
+        if (mes.length() == 1) {
+            mes = "0" + mes;
+        }
 
         SQLiteDatabase db = getReadableDatabase();
-        String[] valores = {"nombre", "hora_ini", "hora_fin", "fecha"};
-        Cursor c
+        String[] FIELDS = {"dd"};
+        Cursor c = db.query("eventos", FIELDS, "mm=?", new String[]{mes}, null, null, "dd ASC", null);
         c.moveToFirst();
 
         //ARRAY DE EVENTOS:
-        ArrayList<Evento> = new A
+        ArrayList<String> eventosGuardados = new ArrayList<String>();
+
+        if (db != null && c.getCount()>0) { //si hay eventos guardados
+
+            do {
+                eventosGuardados.add(c.getString(0));
+                Log.e("EVENTO DIA: ", c.getString(0));
+            }while(c.moveToNext());
+
+            db.close();
+            c.close();
+        }
+
+        return eventosGuardados;
+    }
+
+/*
+    public void getEventoPorFecha(String fecha) {
+
+        SQLiteDatabase db = getReadableDatabase();
+        String[] FIELDS = {"nombre", "hora_ini", "hora_fin", "fecha"};
+
+        Cursor c = db.query("eventos", FIELDS, "fecha=?", new String[]{fecha}, null, null, null, null);
+        c.moveToFirst();
 
         if (c.getCount()>0) { //si hay usuarios registrados
 
@@ -70,29 +99,6 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
             db.close();
             c.close();
         }
-
-
     }*/
-
-
-    public void getEventoPorFecha(String fecha) {
-
-        SQLiteDatabase db = getReadableDatabase();
-        String[] FIELDS = {"nombre", "hora_ini", "hora_fin", "fecha"};
-
-        Cursor c = db.query("eventos", FIELDS, "fecha=?", new String[]{fecha}, null, null, null, null);
-        c.moveToFirst();
-
-        if (db!=null & c.getCount()>0) { //si hay usuarios registrados
-
-            do {
-                Log.e("Nombre: ", c.getString(0) + " / " + c.getString(1) + " / " +  c.getString(2) + " / " + c.getString(3));
-
-            }while(c.moveToNext());
-
-            db.close();
-            c.close();
-        }
-    }
 
 }
