@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <android.support.design.widget.TextInputEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="1"
         android:id="@+id/nombre"
-        android:hint="Nombre del evento"/>
+        android:hint="Nombre del evento"
+        android:layout_below="@+id/listView"/>
 
     <TextView
         android:layout_width="match_parent"

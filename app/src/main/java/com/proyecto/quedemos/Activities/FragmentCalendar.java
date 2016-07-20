@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaCodec;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 @SuppressLint("SimpleDateFormat")
 
@@ -50,26 +54,11 @@ public class FragmentCalendar extends Fragment {
 
     private void setCustomResourceForDates() {
 
-        // Min date is last 7 days
-        //cal.add(Calendar.DATE, -8);
-        //Date blueDate = cal.getTime();
-
-        //Fija un día con un evento
-        //cal = Calendar.getInstance();
-        //cal.set(2016, Calendar.AUGUST, 30);
-        //Date blueDate2 = cal.getTime();
-
-        // Max date is next 7 days
-        //cal = Calendar.getInstance();
-        //cal.add(Calendar.DATE, 7);
-        //Log.e("DiaInt  ", String.valueOf(Calendar.DATE));
-        //Date greenDate = cal.getTime();
-
         Calendar cal = Calendar.getInstance();
         BaseDatosUsuario eventosBD = new BaseDatosUsuario(getContext());
         ArrayList<String> diaEventoMes = eventosBD.getEventosMes(String.valueOf(Calendar.getInstance().get(Calendar.MONTH)+1));
         Date blueDate;
-        ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.blue));
+        ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.green));
         //ColorDrawable green = new ColorDrawable(Color.GREEN);
 
         if (caldroidFragment != null) {
@@ -77,7 +66,7 @@ public class FragmentCalendar extends Fragment {
                 cal.set(Calendar.getInstance().get(Calendar.YEAR),Calendar.getInstance().get(Calendar.MONTH),Integer.parseInt(evento));
                 blueDate = cal.getTime();
                 caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
-                caldroidFragment.setTextColorForDate(R.color.white, blueDate);
+                //caldroidFragment.setTextColorForDate(R.color.white, blueDate);
             }
         }
 
@@ -91,8 +80,6 @@ public class FragmentCalendar extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-
-        //TODO: MIRAR UNA FORMA DE REPINTAR LA VISTA
 
         caldroidFragment = new CaldroidCustomFragment();
 
@@ -110,7 +97,7 @@ public class FragmentCalendar extends Fragment {
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
             //args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false); //MODO COMPACTO
-            args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CaldroidDefaultDark); //MI PROPIO THEME
+            args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CaldroidDefault); //MI PROPIO THEME
             caldroidFragment.setArguments(args);
         }
 
@@ -121,13 +108,8 @@ public class FragmentCalendar extends Fragment {
 
             @Override
             public void onSelectDate(Date date, View view) {
-                Toast.makeText(view.getContext(),formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
-
-                //final EditText txtUrl = new EditText(view.getContext());
-
-               // txtUrl.setHint("Evento");
-
+               // Toast.makeText(view.getContext(),formatter.format(date),
+                    //    Toast.LENGTH_SHORT).show();
                 showCustomView(formatter.format(date));
 
             }
@@ -136,13 +118,9 @@ public class FragmentCalendar extends Fragment {
             public void onChangeMonth(int month, int year) {
                 String text = "month: " + month + " year: " + year;
                // Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
-            }
+                setCustomResourceForDates();
+                caldroidFragment.refreshView();
 
-            @Override
-            public void onLongClickDate(Date date, View view) {
-              /*  Toast.makeText(view.getContext(),
-                        "Long click " + formatter.format(date),
-                        Toast.LENGTH_SHORT).show();*/
             }
 
             @Override
@@ -156,7 +134,7 @@ public class FragmentCalendar extends Fragment {
 
         };
 
-        // Setup Caldroid
+        // Customizacion Caldroid adicional
         caldroidFragment.setCaldroidListener(listener);
 
         final TextView textView = (TextView) view.findViewById(R.id.textview);
@@ -316,15 +294,20 @@ public class FragmentCalendar extends Fragment {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
                         //GUARDAR EVENTO
-                        Log.e("EVENTO: ", nombreEvento.getText().toString());
-                        Log.e("EVENTO: ", horaIni.getText().toString());
-                        Log.e("EVENTO: ", horaFin.getText().toString());
-                        Log.e("DIA", eventDate[0]);
                         BaseDatosUsuario eventosBD = new BaseDatosUsuario(getContext());
-                        eventosBD.nuevoEvento(nombreEvento.getText().toString(), horaIni.getText().toString(), horaFin.getText().toString(),eventDate);
+
+                        if (eventosBD.existeEvento(eventDate,horaIni.getText().toString(),horaFin.getText().toString())) {
+                            Toast.makeText(getContext(), "YA EXISTE", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            eventosBD.nuevoEvento(nombreEvento.getText().toString(), horaIni.getText().toString(), horaFin.getText().toString(), eventDate, 0);
+                        }
 
                         setCustomResourceForDates(); //Actualizar calendario
+                        caldroidFragment.refreshView();
+
                     }
                 })
                 .negativeText("Cancelar")
@@ -335,12 +318,15 @@ public class FragmentCalendar extends Fragment {
         horaIni = (EditText) dialog.getCustomView().findViewById(R.id.editHoraIni);
         horaFin = (EditText) dialog.getCustomView().findViewById(R.id.editHoraFin);
 
+        String timeValidation = "^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$";
+
         nombreEvento.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
             @Override
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                positiveAction.setEnabled(s.toString().trim().length() > 0);
+
+                positiveAction.setEnabled(s.toString().trim().length()>0 && validacionHora(horaIni.getText().toString()) && validacionHora(horaFin.getText().toString()));
             }
             @Override
             public void afterTextChanged(Editable editable) { }
@@ -351,7 +337,7 @@ public class FragmentCalendar extends Fragment {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                positiveAction.setEnabled(s.toString().trim().length() > 0);
+                positiveAction.setEnabled(validacionHora(s.toString()) && nombreEvento.getText().length()!=0 && validacionHora(horaFin.getText().toString()));
             }
             @Override
             public void afterTextChanged(Editable editable) {}
@@ -362,13 +348,20 @@ public class FragmentCalendar extends Fragment {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                positiveAction.setEnabled(s.toString().trim().length() > 0);
+                positiveAction.setEnabled(validacionHora(s.toString()) && validacionHora(horaIni.getText().toString()) && nombreEvento.getText().length()!=0);
             }
             @Override
             public void afterTextChanged(Editable editable) {}
         });
 
         dialog.show();
-        positiveAction.setEnabled(false); // disabled by default
+        positiveAction.setEnabled(false);
+    }
+
+    public boolean validacionHora(String hora){
+        final String timePattern = "^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$";
+        Pattern patt = Pattern.compile(timePattern);
+        Matcher matcher = patt.matcher(hora);
+        return matcher.matches();
     }
 }

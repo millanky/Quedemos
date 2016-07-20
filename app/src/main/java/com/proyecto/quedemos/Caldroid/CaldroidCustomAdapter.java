@@ -3,12 +3,14 @@ package com.proyecto.quedemos.Caldroid;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.proyecto.quedemos.R;
+import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
@@ -97,13 +99,19 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter  {
             // Customize for today
             if (dateTime.equals(getToday())) {
                 cellView.setBackgroundResource(com.caldroid.R.drawable.red_border);
+                dia.setTypeface(null, Typeface.BOLD);
             } else {
                 cellView.setBackgroundResource(com.caldroid.R.drawable.cell_bg);
             }
         }
 
+        BaseDatosUsuario baseDatosUsuario = new BaseDatosUsuario(context);
         dia.setText("" + dateTime.getDay());
-        eventos.setText("+1");
+        int nEventos = baseDatosUsuario.nEventosDia (dateTime.getDay(), dateTime.getMonth(), dateTime.getYear());
+        if ( nEventos  != 0) {
+            eventos.setText("+" + nEventos);
+            eventos.setTypeface(null, Typeface.BOLD_ITALIC);
+        }
 
         // Somehow after setBackgroundResource, the padding collapse.
         // This is to recover the padding
