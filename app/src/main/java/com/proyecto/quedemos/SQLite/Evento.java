@@ -12,6 +12,15 @@ public class Evento {
     private String mmFecha;
     private String yyyyFecha;
 
+    public Evento (String evento, String horaIni, String horaFin, String ddFecha, String mmFecha, String yyyyFecha) { //Constructor
+        this.evento = evento;
+        this.horaIni = horaIni;
+        this.horaFin = horaFin;
+        this.ddFecha = ddFecha;
+        this.mmFecha = mmFecha;
+        this.yyyyFecha = yyyyFecha;
+    }
+
     public String getEvento() {
         return evento;
     }

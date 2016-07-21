@@ -91,21 +91,35 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
         String day = String.valueOf(dia);
         String month = String.valueOf(mes);
         String cyear = String.valueOf(year);
-        if (day.length() == 1) {
-            day =  "0" + day;
-        }
-        if (month.length() == 1) {
-            month = "0" + month;
-        }
+        if (day.length() == 1) {day =  "0" + day;}
+        if (month.length() == 1) {month = "0" + month;}
         Cursor c = db.query("eventos", FIELDS, "dd=? AND mm=? AND yyyy=?", new String[]{day, month, cyear}, null, null, null, null);
         c.moveToFirst();
-
         int count = c.getCount();
 
-        db.close();
-        c.close();
+        db.close();c.close();
 
         return count;
+    }
+
+    public ArrayList<Evento> listadoEventosDia (String[] fecha) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] FIELDS = {"nombre","hora_ini","hora_fin"};
+        String day = fecha[0];
+        String month = fecha[1];
+        String year = fecha[2];
+
+        ArrayList<Evento> listadoEventos = new ArrayList<Evento>();
+
+        Cursor c = db.query("eventos", FIELDS, "dd=? AND mm=? AND yyyy=?", new String[]{day, month, year}, null, null, null, null);
+        c.moveToFirst();
+        if (db != null && c.getCount()>0) {
+            do {
+                Evento e = new Evento(c.getString(0), c.getString(1), c.getString(2), day, month, year);
+                listadoEventos.add(e);
+            } while (c.moveToNext());
+        }
+        return listadoEventos;
     }
 
     public boolean existeEvento (String[] fecha, String horaIni, String horaFin) {
@@ -118,13 +132,10 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
         boolean eventoExist = false;
 
         if (db != null && c.getCount()>0) {
-
             do {
-
                 if (compareDates(horaIni, horaFin, c.getString(0),c.getString(1))) {
                     eventoExist = true;
                 }
-
             }while(c.moveToNext());
 
             db.close();
@@ -155,36 +166,37 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
         }
     }*/
 
-    public static final String inputFormat = "HH:mm";
-
-    private Date horaCIni;
-    private Date horaCFin;
-    private Date inicio;
-    private Date fin;
-
-    SimpleDateFormat inputParser = new SimpleDateFormat(inputFormat, Locale.US);
+    /************** MÉTODOS COMPARACIÓN HORAS ****************/
 
     private boolean compareDates(String horaCompIni, String horaCompFin, String horaIni, String horaFin){
 
-        horaCIni = parseDate(horaCompIni);
-        horaCFin = parseDate(horaCompFin);
-        inicio = parseDate(horaIni);
-        fin = parseDate(horaFin);
+        Date horaCIni = parseDate(horaCompIni);
+        Date horaCFin = parseDate(horaCompFin);
+        Date inicio = parseDate(horaIni);
+        Date fin = parseDate(horaFin);
 
-        boolean entreAmbos = false;
+        boolean conflicto = false;
 
         if ( inicio.before( horaCIni ) && fin.after(horaCIni)) {
-            entreAmbos = true;
-        } else if (inicio.before( horaCFin ) && fin.after(horaCFin)){
-            entreAmbos = true;
-        } else if (horaCIni.before( inicio ) && fin.after(horaCIni)) {
-            entreAmbos = true;
+            conflicto = true;
+        } else if (inicio.before( horaCFin ) && fin.after( horaCFin )){
+            conflicto = true;
+        } else if (horaCIni.after( inicio ) && horaCFin.before( fin )) {
+            conflicto = true;
+        } else if (horaCIni.before( inicio ) && horaCFin.after( fin )){
+            conflicto = true;
+        } else if (horaCIni.equals( inicio ) && horaCFin.equals( fin )) {
+            conflicto = true;
+        } else if (horaCIni.equals( inicio ) && horaCFin.after( fin )) {
+            conflicto = true;
+        } else if (horaCIni.before( inicio ) && horaCFin.equals( fin )) {
+            conflicto = true;
         }
-        return entreAmbos;
+        return conflicto;
     }
 
     private Date parseDate(String date) {
-
+        SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
         try {
             return inputParser.parse(date);
         } catch (java.text.ParseException e) {
