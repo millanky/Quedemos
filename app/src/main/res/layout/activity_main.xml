@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/degradado_fondo">
+    android:id="@+id/layoutContainer"
+    android:background="@drawable/bg_azuloscuro">
 
 
     <TextView
@@ -28,12 +29,13 @@
             android:text="Iniciar sesión con Gmail"
             android:layout_alignBottom="@+id/fragment"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="109dp" />
+            android:layout_marginBottom="109dp"
+            android:onClick="sesionGmail"/>
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/fragment"
-            android:name="com.proyecto.quedemos.Activities.LoginFragment"
+            android:name="com.proyecto.quedemos.InicioSesion.FacebookLoginFragment"
             android:layout_marginTop="200dp"
             android:layout_marginBottom="200dp"
             android:layout_width="match_parent"

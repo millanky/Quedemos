@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
         Bundle bundle = getArguments();
 
         if(bundle != null) {
-            profile = (Profile) bundle.getParcelable(LoginFragment.PARCEL_KEY);
+            profile = (Profile) bundle.getParcelable(FacebookLoginFragment.PARCEL_KEY);
         } else {
             profile = Profile.getCurrentProfile();
         }
@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
         LoginManager.getInstance().logOut();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mainContainer, new LoginFragment());
+        fragmentTransaction.replace(R.id.mainContainer, new FacebookLoginFragment());
         fragmentTransaction.commit();
 
         SharedPreferences prefs = getActivity().getSharedPreferences("Usuario", Context.MODE_PRIVATE);

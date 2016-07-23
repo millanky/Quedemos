@@ -21,6 +21,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -28,7 +29,18 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.proyecto.quedemos.InicioSesion.FacebookLoginFragment;
+import com.proyecto.quedemos.InicioSesion.GoogleSignInActivity;
 import com.proyecto.quedemos.R;
+import com.proyecto.quedemos.RestAPI.Endpoints;
+import com.proyecto.quedemos.RestAPI.adapter.RestApiAdapter;
+import com.proyecto.quedemos.RestAPI.model.UsuarioResponse;
+import com.proyecto.quedemos.Utils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by MartaMillan on 16/7/16.
@@ -37,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String user;
     private Profile profile = null;
-
+    private SharedPreferences prefs;
     private final Handler handler = new Handler();
 
     private PagerSlidingTabStrip tabs;
@@ -46,10 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
     private Drawable oldBackground = null;
     private int currentColor; //0xFF666666;
+    private MaterialDialog cambiarColorDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        Utils.onActivityCreateSetTheme(this);
+        construirDialogoApariencia();
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.q_logo);
@@ -57,19 +74,21 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
-            profile = (Profile) bundle.getParcelable(LoginFragment.PARCEL_KEY);
+        if (bundle != null) {
+            profile = (Profile) bundle.getParcelable(FacebookLoginFragment.PARCEL_KEY);
         } else {
             profile = Profile.getCurrentProfile();
         }
 
         if (isLogued()) {
+            //enviamos token
+            enviarToken();
+
+            //customizamos view
             setContentView(R.layout.custom_view);
             getSupportActionBar().setTitle(user);
 
             tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-            //tabs.setBackgroundColor(currentColor);
-            //tabs.setTextColor(0xFFFFFF);
             pager = (ViewPager) findViewById(R.id.pager);
             adapter = new MyPagerAdapter(getSupportFragmentManager());
 
@@ -81,26 +100,39 @@ public class MainActivity extends AppCompatActivity {
 
             tabs.setViewPager(pager);
 
-            SharedPreferences prefs = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
-            currentColor = prefs.getInt("themeColor", -11443780);
+            prefs = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+            currentColor = prefs.getInt("themeColor", -11443780); //azul oscuro por defecto
             changeColor(currentColor);
             tabs.setIndicatorColor(currentColor);
 
         } else {
             setContentView(R.layout.activity_main);
             getSupportActionBar().setTitle("Quedemos!");
+            RelativeLayout layoutContainer = (RelativeLayout) findViewById(R.id.layoutContainer);
+            if (currentColor == -10066330) { //gris
+                layoutContainer.setBackground(getResources().getDrawable(R.drawable.bg_gris));
+            } else if (currentColor == -6903239) { //verde
+                layoutContainer.setBackground(getResources().getDrawable(R.drawable.bg_verde));
+            } else if (currentColor == -3716282) { //rojo
+                layoutContainer.setBackground(getResources().getDrawable(R.drawable.bg_rojo));
+            } else if (currentColor == -752595) { //naranja
+                layoutContainer.setBackground(getResources().getDrawable(R.drawable.bg_naranja));
+            } else if (currentColor == -12607520) { //azul claro
+                layoutContainer.setBackground(getResources().getDrawable(R.drawable.bg_azulclaro));
+            } else {
+                layoutContainer.setBackground(getResources().getDrawable(R.drawable.bg_azuloscuro));
+            }
         }
-
-
 
 /*
            // new downloadTask().execute(picture);
         }*/
     }
 
-    //Comprobar si el usuario está logueado
+    //------------- COMPROBAR SI EL USUARIO ESTA LOGUEADO  --------
+
     public boolean isLogued() {
-        SharedPreferences prefs = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
         user = prefs.getString("user", "");
 
         if (user.equals("")) {
@@ -109,6 +141,77 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
+
+    // ----------- LOGUEAR CON GMAIL -----------
+    public void sesionGmail(View view) {
+        Intent i = new Intent(this, GoogleSignInActivity.class);
+        startActivity(i);
+    }
+
+    // ----------- GUARDAR TOKEN ------------
+
+    public void enviarToken() {
+
+        //SOLICITAMOS EL TOKEN
+        String token = FirebaseInstanceId.getInstance().getToken();
+        String tokenAlmacenado = prefs.getString("token","");
+        if (tokenAlmacenado == "") {
+            enviarTokenRegistro(token);
+        } else if (tokenAlmacenado != token) {
+            actualizarTokenRegistro(prefs.getString("databaseID",""),token);
+        }
+    }
+
+    private void enviarTokenRegistro(String token) {
+        RestApiAdapter restApiAdapter = new RestApiAdapter();
+        Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
+        Call<UsuarioResponse> usuarioResponseCall = endpoints.registrarTokenID(token, user, prefs.getString("picture",""));
+
+        usuarioResponseCall.enqueue(new Callback<UsuarioResponse>() {
+            @Override
+            public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
+                UsuarioResponse usuarioResponse = response.body();
+
+                prefs.edit().putString("token", usuarioResponse.getToken()).apply();
+                prefs.edit().putString("databaseID", usuarioResponse.getId()).apply();
+
+                Log.d("ID_FIREBASE", usuarioResponse.getId());
+                Log.d("TOKEN_FIREBASE", usuarioResponse.getToken());
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void actualizarTokenRegistro(String id,String token) {
+        UsuarioResponse usuarioResponse = new UsuarioResponse(id,token,"");
+        RestApiAdapter restApiAdapter = new RestApiAdapter();
+        Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
+        Call<UsuarioResponse> usuarioResponseCallEdit = endpoints.actualizarTokenID(id, token);
+
+        usuarioResponseCallEdit.enqueue(new Callback<UsuarioResponse>() {
+            @Override
+            public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
+                UsuarioResponse usuarioResponse = response.body();
+
+                prefs.edit().putString("token", usuarioResponse.getToken()).apply();
+                prefs.edit().putString("databaseID", usuarioResponse.getId()).apply();
+
+                Log.d("ID_FIREBASE", usuarioResponse.getId());
+                Log.d("TOKEN_FIREBASE", usuarioResponse.getToken());
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    //------------------- C A M B I A R  C O L O R ----------------
 
     private void changeColor(int newColor) {
 
@@ -146,10 +249,8 @@ public class MainActivity extends AppCompatActivity {
 
             oldBackground = ld;
 
-            // http://stackoverflow.com/questions/11002691/actionbar-setbackgrounddrawable-nulling-background-from-thread-handler
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-
         }
 
         currentColor = newColor;
@@ -159,6 +260,29 @@ public class MainActivity extends AppCompatActivity {
         edit.putInt("themeColor", currentColor);
         edit.commit();
 
+        if (cambiarColorDialog.isShowing()) {
+            cambiarColorDialog.dismiss();
+        }
+
+        if (currentColor == -10066330) { //gris
+            Utils.changeToTheme(this, Utils.THEME_GRIS);
+            pager.setBackground(getResources().getDrawable(R.drawable.bg_gris));
+        } else if  (currentColor == -6903239) { //verde
+            Utils.changeToTheme(this, Utils.THEME_VERDE);
+            pager.setBackground(getResources().getDrawable(R.drawable.bg_verde));
+        } else if  (currentColor == -3716282) { //rojo
+            Utils.changeToTheme(this, Utils.THEME_ROJO);
+            pager.setBackground(getResources().getDrawable(R.drawable.bg_rojo));
+        } else if  (currentColor == -752595) { //naranja
+            Utils.changeToTheme(this, Utils.THEME_NARAJA);
+            pager.setBackground(getResources().getDrawable(R.drawable.bg_naranja));
+        } else if  (currentColor == -12607520) { //azul claro
+            Utils.changeToTheme(this, Utils.THEME_AZULCLARITO);
+            pager.setBackground(getResources().getDrawable(R.drawable.bg_azulclaro));
+        } else {
+            Utils.changeToTheme(this, Utils.THEME_DEFAULT);
+            pager.setBackground(getResources().getDrawable(R.drawable.bg_azuloscuro));
+        }
     }
 
     public void onColorClicked(View v) {
@@ -187,21 +311,15 @@ public class MainActivity extends AppCompatActivity {
         public void invalidateDrawable(Drawable who) {
             getSupportActionBar().setBackgroundDrawable(who);
         }
-
         @Override
-        public void scheduleDrawable(Drawable who, Runnable what, long when) {
-            handler.postAtTime(what, when);
-        }
-
+        public void scheduleDrawable(Drawable who, Runnable what, long when) {handler.postAtTime(what, when);}
         @Override
-        public void unscheduleDrawable(Drawable who, Runnable what) {
-            handler.removeCallbacks(what);
-        }
+        public void unscheduleDrawable(Drawable who, Runnable what) {handler.removeCallbacks(what);}
     };
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = { "Calendario", "Grupos", "Opciones"};
+        private final String[] TITLES = { "Calendario", "Quedadas", "Opciones"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -233,16 +351,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //-------------- CAMBIAR APARIENCIA ---------
+    //-------------- MODALVIEW CAMBIAR APARIENCIA ---------
 
     public void cambiarApariencia (View v) {
-        new MaterialDialog.Builder(this)
-                .title("Elige un color")
-                .customView(R.layout.paleta_colores, true) //true indica con ScrollView
-                .positiveText("Cerrar")
-                .show();
+        cambiarColorDialog.show();
     }
 
+    private void construirDialogoApariencia () {
+        cambiarColorDialog = new MaterialDialog.Builder(this)
+                .title("Elige un color")
+                .customView(R.layout.paleta_colores, true)
+                .positiveText("Cerrar")
+                .build();
+    }
 
     //-------------- M E N U ----------------------------
 
@@ -256,15 +377,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.logout) {
             logout();
             return true;
+        } else if (id == R.id.amigos){
+            Intent i = new Intent(this, AmigosActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -276,9 +396,7 @@ public class MainActivity extends AppCompatActivity {
         LoginManager.getInstance().logOut();
 
         SharedPreferences prefs = this.getSharedPreferences("Usuario", Context.MODE_PRIVATE);
-        prefs.edit().clear().commit();
-        /*SharedPreferences.Editor edit = prefs.edit();
-        edit.clear();*/
+        prefs.edit().putString("user","").commit();
 
         String pr_user = prefs.getString("user", "");
         Log.e("PRUEBA", pr_user);

@@ -20,7 +20,7 @@ public class NotificationIDTokenService extends FirebaseInstanceIdService {
         enviarTokenRegistro(token);
     }
 
-    private void enviarTokenRegistro(String token) {
+    private void enviarTokenRegistro(String token) { //enviar registro al servidor
         Log.e(TAG,token);
     }
 }

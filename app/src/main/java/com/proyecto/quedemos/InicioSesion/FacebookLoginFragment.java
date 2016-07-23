@@ -1,4 +1,4 @@
-package com.proyecto.quedemos.Activities;
+package com.proyecto.quedemos.InicioSesion;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +31,7 @@ import org.w3c.dom.Text;
 /**
  * Created by Usuario on 16/06/2016.
  */
-public class LoginFragment extends Fragment {
+public class FacebookLoginFragment extends Fragment {
 
     private CallbackManager callbackManager = null;
     private AccessTokenTracker mtracker = null;
@@ -39,7 +39,7 @@ public class LoginFragment extends Fragment {
 
     public static final String PARCEL_KEY = "parcel_key";
 
-    public LoginFragment()
+    public FacebookLoginFragment()
     {
         setRetainInstance(true);
     }
@@ -96,15 +96,6 @@ public class LoginFragment extends Fragment {
 
             Bundle mBundle = new Bundle ();
             mBundle.putParcelable(PARCEL_KEY, profile);
-
-
-            /*HomeFragment hf = new HomeFragment();
-            hf.setArguments(mBundle);
-
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.mainContainer, new HomeFragment());
-            fragmentTransaction.commit();*/
 
             //Guardo datos de usuario en las shared preferences
             String user = profile.getName().toString();

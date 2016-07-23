@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -78,7 +77,7 @@ public class FragmentCalendar extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        final View modalView = inflater.inflate(R.layout.insertar_evento,container,false);
+        final View modalView = inflater.inflate(R.layout.modal_insertar_evento,container,false);
 
         final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -290,7 +289,7 @@ public class FragmentCalendar extends Fragment {
 
     /***** MOSTRAR EVENTOS ****/
 
-    public void showListView (ArrayList<Evento> listEventos, String date) {
+    public void showListView (ArrayList<Evento> eventosList, String date) {
 
         final String[] eventDate = date.split("-");
         final String fecha = date;
@@ -298,7 +297,7 @@ public class FragmentCalendar extends Fragment {
         MaterialDialog dialogView = new MaterialDialog.Builder(getContext())
                 .title("Eventos " + eventDate[0] + "/" +eventDate[1])
                 .customView(R.layout.modal_ver_eventos, false) //true indica con ScrollView
-                //.icon(R.drawable.write)
+                .icon(getResources().getDrawable(R.drawable.ver))
                 .positiveText("Nuevo evento")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -307,6 +306,7 @@ public class FragmentCalendar extends Fragment {
                         showAddView(fecha);
                     }
                 })
+                .negativeText("Cerrar")
                 .build();
 
         eventosDiaList = (ListView) dialogView.getCustomView().findViewById(R.id.listadoEventos);
@@ -326,8 +326,8 @@ public class FragmentCalendar extends Fragment {
 
         MaterialDialog dialogNew = new MaterialDialog.Builder(getContext())
                 .title("Nuevo evento:")
-                .customView(R.layout.insertar_evento, true) //true indica con ScrollView
-                //.icon(R.drawable.write)
+                .customView(R.layout.modal_insertar_evento, true) //true indica con ScrollView
+                .icon(getResources().getDrawable(R.drawable.write))
                 .positiveText("Guardar")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override

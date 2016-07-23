@@ -34,7 +34,7 @@ public class NotificationService extends FirebaseMessagingService {
 
         Uri sonido = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION); //lo que el usuario tenga puesto para notifiacioes
         NotificationCompat.Builder notificacion = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.q_logo)
                 .setContentTitle("Notificacion")
                 .setContentText(remoteMessage.getNotification().getBody())
                 .setSound(sonido)

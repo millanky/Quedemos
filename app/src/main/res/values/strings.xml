@@ -63,5 +63,8 @@
     <string name="permisos">Permisos</string>
     <string name="faq">FAQ</string>
     <string name="contacto">Contacto</string>
+    <string name="amigos">Amigos</string>
+    <string name="logout_menu">Log out</string>
+    <string name="a_adir_nuevo_amigo">Añadir nuevo amigo</string>
 
 </resources>

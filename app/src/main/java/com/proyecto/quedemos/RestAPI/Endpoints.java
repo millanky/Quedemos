@@ -16,10 +16,15 @@ public interface Endpoints {
 
     @FormUrlEncoded
     @POST(ConstantesRestAPI.KEY_POST_ID_TOKEN)
-    Call<UsuarioResponse> registrarTokenID(@Field("token") String token, @Field("animal") String animal);
-    //Indico el ANIMAL que REGISTRO
+    Call<UsuarioResponse> registrarTokenID(@Field("token") String token, @Field("nombre") String nombre, @Field("urlimg") String urlimg);
+
+    @FormUrlEncoded
+    @POST(ConstantesRestAPI.KEY_ACTUALIZAR_TOKEN)
+    Call<UsuarioResponse> actualizarTokenID(@Field("id") String id, @Field("token") String token);
+
+    @GET(ConstantesRestAPI.KEY_FIND_FRIEND)
+    Call<UsuarioResponse> buscarAmigos (@Path("nombre") String nombre);
 
     @GET(ConstantesRestAPI.KEY_TOQUE_ANIMAL)
     Call<UsuarioResponse> toqueAnimal(@Path("id") String id, @Path("animal") String animal);
-
 }

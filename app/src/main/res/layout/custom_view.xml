@@ -15,8 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tabs"
-        tools:context=".Activities.MainActivity"
-        android:background="@drawable/degradado_fondo"/>
+        tools:context=".Activities.MainActivity" />
 
 
 

@@ -8,6 +8,36 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="grisTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FF666666</item>
+        <item name="colorPrimaryDark">#4E4C4C</item>
+        <item name="colorAccent">#DE2C26</item>
+    </style>
+
+    <style name="rojoTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FFC74B46</item>
+        <item name="colorPrimaryDark">#8B1C18</item>
+        <item name="colorAccent">#DE2C26</item>
+    </style>
+
+    <style name="naranjaTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FFF4842D</item>
+        <item name="colorPrimaryDark">#C96213</item>
+        <item name="colorAccent">#DE2C26</item>
+    </style>
+
+    <style name="azulClaroTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FF3F9FE0</item>
+        <item name="colorPrimaryDark">#116DAB</item>
+        <item name="colorAccent">#DE2C26</item>
+    </style>
+
+    <style name="verdeTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FF96AA39</item>
+        <item name="colorPrimaryDark">#738B10</item>
+        <item name="colorAccent">#DE2C26</item>
+    </style>
+
     <style name="Toolbar" parent="Theme.AppCompat">
         <item name="colorPrimary">#3a5495</item>
         <item name="android:textColorPrimary">#ffffff</item>

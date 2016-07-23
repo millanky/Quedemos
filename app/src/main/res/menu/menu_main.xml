@@ -4,9 +4,10 @@
     tools:context=".SinUso.MainActivity4">
 
     <item
-        android:title="PRUEBA" />
+        android:title="@string/amigos"
+        android:id="@+id/amigos"/>
     <item
         android:id="@+id/logout"
         android:orderInCategory="100"
-        android:title="@string/com_facebook_loginview_log_out_action" />
+        android:title="@string/logout_menu" />
 </menu>

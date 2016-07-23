@@ -1,11 +1,87 @@
 <resources>>
 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="grisTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FF666666</item>
+        <item name="colorPrimaryDark">#4E4C4C</item>
+        <item name="colorAccent">#878585</item>
+    </style>
+
+    <style name="rojoTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FFC74B46</item>
+        <item name="colorPrimaryDark">#8B1C18</item>
+        <item name="colorAccent">#DE2C26</item>
+    </style>
+
+    <style name="naranjaTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FFF4842D</item>
+        <item name="colorPrimaryDark">#C96213</item>
+        <item name="colorAccent">#EF8F45</item>
+    </style>
+
+    <style name="azulClaroTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FF3F9FE0</item>
+        <item name="colorPrimaryDark">#116DAB</item>
+        <item name="colorAccent">#69BBF2</item>
+    </style>
+
+    <style name="Toolbar" parent="Theme.AppCompat">
+        <item name="colorPrimary">#3a5495</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Activity with no Title -->
+    +    <style name="ThemeOverlay.MyNoTitleActivity" parent="AppTheme">
+        +        <item name="windowActionBar">false</item>
+        +        <item name="windowNoTitle">true</item>
+        +    </style>
+    +
+    +    <!-- Dark Buttons -->
+    +    <style name="ThemeOverlay.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
+        +        <item name="colorButtonNormal">@color/colorAccent</item>
+        +        <item name="android:layout_marginRight">4dp</item>
+        +        <item name="android:layout_marginLeft">4dp</item>
+        +        <item name="android:textColor">@android:color/white</item>
+        +    </style>
+    +
+    +    <!-- Light EditTexts -->
+    +    <style name="ThemeOverlay.MyLightEditText" parent="ThemeOverlay.AppCompat.Dark"/>
+    +
+    +    <style name="ThemeOverlay.MyTextDetail" parent="AppTheme">
+        +        <item name="android:layout_width">wrap_content</item>
+        +        <item name="android:layout_height">wrap_content</item>
+        +        <item name="android:fadeScrollbars">true</item>
+        +        <item name="android:gravity">center</item>
+        +        <item name="android:maxLines">5</item>
+        +        <item name="android:padding">4dp</item>
+        +        <item name="android:scrollbars">vertical</item>
+        +        <item name="android:textSize">14sp</item>
+        +    </style>
+    +
+    +    <style name="ThemeOverlay.FirebaseIcon" parent="AppTheme">
+        +        <item name="android:layout_marginTop">@dimen/icon_top_margin</item>
+        +        <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
+        +    </style>
+    +
+    +    <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
+        +        <item name="android:gravity">center</item>
+        +        <item name="android:textSize">36sp</item>
+        +    </style>
 
     <style name="CaldroidDefaultDark" parent="CaldroidDefault">
         <item name="styleCaldroidViewLayout">@style/CaldroidDefaultDarkCalendarViewLayout</item>
