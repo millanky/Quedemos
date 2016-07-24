@@ -4,6 +4,9 @@
     tools:context=".SinUso.MainActivity4">
 
     <item
+        android:title="Mi cuenta"
+        android:id="@+id/cuenta"/>
+    <item
         android:title="@string/amigos"
         android:id="@+id/amigos"/>
     <item

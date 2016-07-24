@@ -20,30 +20,84 @@ import java.util.StringTokenizer;
 
 public class BaseDatosUsuario extends SQLiteOpenHelper {
 
-    private static final String nombre = "eventos.db";
+    private static final String nombre = "user.db";
 
     private static final int version = 1;
 
-    private static final String tabla = "CREATE TABLE eventos (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+    private static final String tablaEventos = "CREATE TABLE eventos (id INTEGER PRIMARY KEY AUTOINCREMENT," +
             " nombre TEXT, hora_ini TEXT, hora_fin TEXT, dd TEXT, mm TEXT, yyyy TEXT, quedada INTEGER)";
+    private static final String tablaAmigos = "CREATE TABLE amigos (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " nombre TEXT, token TEXT, urlimg TEXT)";
 
     //CONSTRUCTOR
     public BaseDatosUsuario (Context context) {
         super(context, nombre, null, version);
     }
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(tabla);
+        db.execSQL(tablaEventos);
+        db.execSQL(tablaAmigos);
     }
 
     public void onUpgrade(SQLiteDatabase db, int Oversion, int Nversion) {
-        db.execSQL("DROP TABLE IF EXISTS" + tabla); //tiramos la tabla y la volvemos a crear
+        db.execSQL("DROP TABLE IF EXISTS" + tablaEventos); //tiramos la tabla y la volvemos a crear
+        db.execSQL("DROP TABLE IF EXISTS" + tablaAmigos);
         onCreate(db);
     }
+
+    //----------------------------- A M I G O S --------------------------------------//
+
+    public void nuevoAmigo (String token, String nombre, String urlimg) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        if (db != null) {
+            ContentValues amigo = new ContentValues();
+            amigo.put("nombre", nombre);
+            amigo.put("urlimg", urlimg);
+            amigo.put("token", token);
+            db.insert("amigos", null, amigo);
+        }
+        db.close();
+    }
+
+    public boolean existeAmigo (String nombre) {
+        boolean existe = false;
+        SQLiteDatabase db = getReadableDatabase();
+        String[] FIELDS = {"nombre"};
+        Cursor c = db.query("amigos", FIELDS, "nombre=?", new String[]{nombre}, null, null, null, null);
+        c.moveToFirst();
+
+        if (c.getCount() > 0) {
+
+            existe = true;
+        }
+        return existe;
+    }
+
+    public ArrayList<Amigo> mostrarAmigos () {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] FIELDS = {"nombre","urlimg","token"};
+
+        ArrayList<Amigo> listadoAmigos = new ArrayList<Amigo>();
+
+        Cursor c = db.query("amigos", FIELDS, null, null, null, null, null, null);
+        c.moveToFirst();
+
+        if (db != null && c.getCount()>0) {
+            do {
+                Amigo a = new Amigo(c.getString(0), c.getString(1), c.getString(2));
+                listadoAmigos.add(a);
+            } while (c.moveToNext());
+        }
+
+        return listadoAmigos;
+    }
+
+    //--------------------------- E V E N T O S --------------------------------------//
 
     public void nuevoEvento(String nombre, String horaIni, String horaFin, String[] fecha, int quedada) {
         SQLiteDatabase db = getWritableDatabase();
 
-        if (db != null) { //si hay algo escrito
+        if (db != null) {
             ContentValues evento = new ContentValues();
             evento.put("nombre", nombre);
             evento.put("hora_ini",horaIni);

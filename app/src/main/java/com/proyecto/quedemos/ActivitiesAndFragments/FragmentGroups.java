@@ -1,17 +1,15 @@
-package com.proyecto.quedemos.Activities;
+package com.proyecto.quedemos.ActivitiesAndFragments;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.proyecto.quedemos.Calendar.EventosAdapter;
+import com.proyecto.quedemos.ArrayAdapters.EventosAdapter;
 import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.proyecto.quedemos.SQLite.Evento;

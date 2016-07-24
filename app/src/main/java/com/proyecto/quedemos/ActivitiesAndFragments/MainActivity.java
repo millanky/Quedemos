@@ -1,4 +1,4 @@
-package com.proyecto.quedemos.Activities;
+package com.proyecto.quedemos.ActivitiesAndFragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -156,16 +156,16 @@ public class MainActivity extends AppCompatActivity {
         String token = FirebaseInstanceId.getInstance().getToken();
         String tokenAlmacenado = prefs.getString("token","");
         if (tokenAlmacenado == "") {
-            enviarTokenRegistro(token);
-        } else if (tokenAlmacenado != token) {
+            enviarTokenRegistro(token, prefs.getString("user",""),prefs.getString("picture",""));
+        } else if (!tokenAlmacenado.equals(token)) {
             actualizarTokenRegistro(prefs.getString("databaseID",""),token);
         }
     }
 
-    private void enviarTokenRegistro(String token) {
+    private void enviarTokenRegistro(String token, String user, String pic) {
         RestApiAdapter restApiAdapter = new RestApiAdapter();
         Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
-        Call<UsuarioResponse> usuarioResponseCall = endpoints.registrarTokenID(token, user, prefs.getString("picture",""));
+        Call<UsuarioResponse> usuarioResponseCall = endpoints.registrarTokenID(token, user, pic);
 
         usuarioResponseCall.enqueue(new Callback<UsuarioResponse>() {
             @Override
@@ -187,10 +187,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void actualizarTokenRegistro(String id,String token) {
-        UsuarioResponse usuarioResponse = new UsuarioResponse(id,token,"");
         RestApiAdapter restApiAdapter = new RestApiAdapter();
         Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
-        Call<UsuarioResponse> usuarioResponseCallEdit = endpoints.actualizarTokenID(id, token);
+        Call<UsuarioResponse> usuarioResponseCallEdit = endpoints.actualizarTokenID(id, id, token);
 
         usuarioResponseCallEdit.enqueue(new Callback<UsuarioResponse>() {
             @Override

@@ -1,4 +1,4 @@
-package com.proyecto.quedemos.Activities;
+package com.proyecto.quedemos.ActivitiesAndFragments;
 
 /**
  * Created by MartaMillan on 16/7/16.
@@ -6,15 +6,9 @@ package com.proyecto.quedemos.Activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.proyecto.quedemos.R;

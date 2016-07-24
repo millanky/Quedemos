@@ -1,15 +1,12 @@
-package com.proyecto.quedemos.Activities;
+package com.proyecto.quedemos.ActivitiesAndFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.proyecto.quedemos.R;
 
 /**

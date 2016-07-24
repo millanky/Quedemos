@@ -20,7 +20,7 @@ public interface Endpoints {
 
     @FormUrlEncoded
     @POST(ConstantesRestAPI.KEY_ACTUALIZAR_TOKEN)
-    Call<UsuarioResponse> actualizarTokenID(@Field("id") String id, @Field("token") String token);
+    Call<UsuarioResponse> actualizarTokenID(@Path("id") String id, @Field("id") String id2, @Field("token") String token);
 
     @GET(ConstantesRestAPI.KEY_FIND_FRIEND)
     Call<UsuarioResponse> buscarAmigos (@Path("nombre") String nombre);

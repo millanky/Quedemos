@@ -1,4 +1,4 @@
-package com.proyecto.quedemos.Activities;
+package com.proyecto.quedemos.ActivitiesAndFragments;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.proyecto.quedemos.Calendar.CaldroidCustomFragment;
-import com.proyecto.quedemos.Calendar.EventosAdapter;
+import com.proyecto.quedemos.ArrayAdapters.EventosAdapter;
 import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.proyecto.quedemos.SQLite.Evento;

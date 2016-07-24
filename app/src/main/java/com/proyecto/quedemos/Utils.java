@@ -1,11 +1,7 @@
 package com.proyecto.quedemos;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-
-import com.proyecto.quedemos.Activities.MainActivity;
-import com.proyecto.quedemos.R;
 
 public class Utils
 {
