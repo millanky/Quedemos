@@ -1,4 +1,4 @@
-package com.proyecto.quedemos.ActivitiesAndFragments;
+package com.proyecto.quedemos.SinUso;
 
 /**
  * Created by MartaMillan on 16/7/16.
@@ -14,7 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.proyecto.quedemos.R;
 
 public class TabFragment extends Fragment {
-
+/*
     private static final String ARG_POSITION = "position";
 
     private int position;
@@ -41,7 +41,7 @@ public class TabFragment extends Fragment {
             return inflater.inflate(R.layout.fragment_calendar, container, false);
         } else if (position == 1) {
 
-              View view = inflater.inflate(R.layout.fragment_groups, container, false);
+              View view = inflater.inflate(R.layout.fragment_quedada, container, false);
 
                 FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
                 fab.setOnClickListener(new View.OnClickListener() {
@@ -82,8 +82,8 @@ public class TabFragment extends Fragment {
         fl.addView(v);
 
 
-        return fl;*/
+        return fl;
 
-    }
+    }*/
 
 }

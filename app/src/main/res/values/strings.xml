@@ -71,7 +71,26 @@
     <string name="info_quedemos">Para todos aquellos “a ver si quedamos un día” que caen en sacos
 rotos. Una aplicación para compatibilizar agendas de forma sencilla y eficaz: basta
 con que cada uno indique su disponibilidad y se determinará qué día es el que más amigos
-pueden acudir. ¡Quedemos!.</string>
-    <string name="permisos_txt">Buscar cuentas en el dispositivo</string>
+pueden acudir. ¡Quedemos!</string>
+    <string name="permisos_cuentas">Buscar cuentas en el dispositivo</string>
+    <string name="permisos_datos">Enviar y recibir datos</string>
+    <string name="permisos_suspension">Impedir que el teléfono entre en modo de suspensión</string>
+    <string name="email_contact">Mandar correo electrónico</string>
+    <string name="contacto_facebook">Página de Facebook</string>
+    <string name="contacto_twitter">Página de Twitter</string>
+    <string name="copyright">© 2016 Marta Millán Calvo</string>
+    <string name="nombre">Nombre</string>
+    <string name="lbl_compat">Intervalo de compatibilidad:</string>
+    <string name="fecha_inicio">Fecha inicio: </string>
+    <string name="fecha_fin">Fecha fin:</string>
+    <string name="finde_solo">Solo fin de semana</string>
+    <string name="lbl_horario">Horario de quedada:</string>
+    <string name="desayuno">Desayuno (09:00&#8211;11:00)</string>
+    <string name="almuerzo">Almuerzo (11:00&#8211;13:00)</string>
+    <string name="comida">Comida (13:00&#8211;16:00)</string>
+    <string name="caf_merienda">Café-merienda (16:00&#8211;18:00)</string>
+    <string name="copas">Copas (18:00&#8211;20:00)</string>
+    <string name="cena">Cena (20:00&#8211;24:00)</string>
+    <string name="add_friend">Añade a uno de tus amigos</string>
 
 </resources>

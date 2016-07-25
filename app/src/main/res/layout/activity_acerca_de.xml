@@ -2,36 +2,51 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:id="@+id/acercaContainer">
 
-<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/translucentWhite">
 
     <ImageView
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:id="@+id/logo"
         android:src="@drawable/logo"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginLeft="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_alignBaseline="@+id/logo"
+        android:layout_toRightOf="@+id/logo"
+        android:layout_toEndOf="@+id/logo"
+        android:layout_marginTop="51dp"
+        android:layout_marginLeft="20sp"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/info_quedemos"
-        android:textSize="17sp"
+        android:textSize="16sp"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:id="@+id/descripcion"
         android:layout_below="@+id/logo"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textStyle="italic" />
     <ImageView
         android:id="@+id/imageViewSeparator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/descripcion"
         android:src="@android:drawable/progress_horizontal"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:scaleType="fitXY"/>
 
     <ImageView
@@ -63,18 +78,171 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
         android:src="@drawable/account"/>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/lblPermisosCuentas"
         android:paddingTop="10dp"
         android:paddingRight="40dp"
-        android:text="@string/permisos_txt"
+        android:text="@string/permisos_cuentas"
         android:layout_below="@+id/imagenPermisos"
-        android:layout_toRightOf="@+id/imgAccount"/>
+        android:layout_toRightOf="@+id/imgAccount"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/imgNetwork"
+        android:layout_below="@+id/imgAccount"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/network"
+        android:tint="@android:color/black"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingRight="40dp"
+        android:text="@string/permisos_datos"
+        android:layout_below="@+id/lblPermisosCuentas"
+        android:layout_toRightOf="@+id/imgNetwork"
+        android:layout_toEndOf="@+id/imgNetwork"
+        android:id="@+id/lblPermisosRedes"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/imgBattery"
+        android:layout_below="@+id/imgNetwork"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/battery"
+        android:tint="@android:color/black"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingRight="40dp"
+        android:id="@+id/lblPermisosBattery"
+        android:text="@string/permisos_suspension"
+        android:layout_below="@+id/lblPermisosRedes"
+        android:layout_toRightOf="@+id/imgNetwork"
+        android:layout_toEndOf="@+id/imgNetwork"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/imageViewSeparatorContact"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblPermisosBattery"
+        android:src="@android:drawable/progress_horizontal"
+        android:layout_margin="20dp"
+        android:scaleType="fitXY"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_dialog_email"
+        android:tint="@color/colorPrimaryDark"
+        android:id="@+id/imagenContacto"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/lblContacto"
+        android:layout_toStartOf="@+id/lblContacto"
+        android:layout_below="@+id/imageViewSeparatorContact"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/contacto"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:id="@+id/lblContacto"
+        android:paddingTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageViewSeparatorContact" />
 
 
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/gmail"
+        android:id="@+id/imagenGmail"
+        android:layout_marginRight="5dp"
+        android:layout_alignLeft="@+id/imgAccount"
+        android:layout_alignStart="@+id/imgAccount"
+        android:layout_below="@+id/lblContacto"
+        android:onClick="enviarEmail"/>
 
-</android.support.percent.PercentRelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/email_contact"
+        android:layout_below="@+id/lblContacto"
+        android:layout_alignLeft="@+id/lblPermisosCuentas"
+        android:layout_alignStart="@+id/lblPermisosCuentas"
+        android:onClick="enviarEmail"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/facebook"
+        android:id="@+id/imagenFacebook"
+        android:layout_marginRight="5dp"
+        android:layout_alignLeft="@+id/imgAccount"
+        android:layout_alignStart="@+id/imgAccount"
+        android:layout_below="@+id/imagenGmail"
+        android:onClick="abrirFacebook"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/contacto_facebook"
+        android:layout_below="@+id/imagenGmail"
+        android:layout_alignLeft="@+id/lblPermisosCuentas"
+        android:layout_alignStart="@+id/lblPermisosCuentas"
+        android:onClick="abrirFacebook"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/twitter"
+        android:id="@+id/imagenTwitter"
+        android:layout_marginRight="5dp"
+        android:layout_alignLeft="@+id/imgAccount"
+        android:layout_alignStart="@+id/imgAccount"
+        android:layout_below="@+id/imagenFacebook"
+        android:onClick="abrirTwitter"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/contacto_twitter"
+        android:layout_below="@+id/imagenFacebook"
+        android:layout_alignLeft="@+id/lblPermisosCuentas"
+        android:layout_alignStart="@+id/lblPermisosCuentas"
+        android:onClick="abrirTwitter"
+        android:layout_marginBottom="60dp"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/copyright"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp"/>
+
+
+</RelativeLayout>
 
 </ScrollView>

@@ -130,7 +130,7 @@ public class HomeFragment extends Fragment {
                 case 0:
                     return new FragmentCalendar();
                 case 1:
-                    return new FragmentGroups();
+                    return new FragmentQuedadas();
                 case 2:
                     return new FragmentAmigos();
                 default:

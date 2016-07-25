@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nombreQuedada"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:text="Cena trabajo"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:text="12 participantes"
+        android:layout_alignBaseline="@+id/nombreQuedada"
+        android:layout_alignBottom="@+id/nombreQuedada"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="end|right"
+        android:id="@+id/numParticipantes"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_below="@+id/nombreQuedada"
+        android:id="@+id/iconoCal"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fechas"
+        android:text="04/07/2016 al 14/07/2016"
+        android:layout_alignBottom="@+id/iconoCal"
+        android:layout_toRightOf="@+id/iconoCal"
+        android:layout_toEndOf="@+id/iconoCal" />
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/clock"
+        android:tint="@color/translucentPrimaryDark"
+        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/iconoCal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/iconoClock"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iconoClock"
+        android:layout_toEndOf="@+id/iconoClock"
+        android:layout_alignBottom="@+id/iconoClock"
+        android:paddingLeft="10dp"
+        android:text="11:00 - 12:00"
+        android:id="@+id/horas"/>
+
+
+</android.support.percent.PercentRelativeLayout>

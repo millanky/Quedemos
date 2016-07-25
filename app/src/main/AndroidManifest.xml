@@ -48,7 +48,7 @@
         <activity
             android:name=".ActivitiesAndFragments.AcercaDeActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="Mi cuenta"
+            android:label="Acerca de"
             android:parentActivityName=".ActivitiesAndFragments.MainActivity">
         </activity>
 

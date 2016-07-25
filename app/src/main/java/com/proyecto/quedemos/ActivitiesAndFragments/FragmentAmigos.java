@@ -132,8 +132,11 @@ public class FragmentAmigos extends Fragment {
     }
 
     public void buscando(){
+
         dialogBuscando = new MaterialDialog.Builder(getContext())
-                .title("Buscando...")
+                .title("Buscando amigo")
+                .content("Esta acción puede tardar unos segundos")
+                .progress(true, 0)
                 .build();
     }
 

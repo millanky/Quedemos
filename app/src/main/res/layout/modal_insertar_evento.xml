@@ -32,7 +32,8 @@
         android:id="@+id/editHoraIni"
         android:layout_below="@+id/nombre"
         android:layout_toRightOf="@+id/lblHoraIni"
-        android:layout_toEndOf="@+id/lblHoraIni" />
+        android:layout_toEndOf="@+id/lblHoraIni"
+        android:hint="00:00"/>
 
 
     <TextView
@@ -52,7 +53,8 @@
         android:id="@+id/editHoraFin"
         android:layout_below="@+id/editHoraIni"
         android:layout_toRightOf="@+id/lblHoraIni"
-        android:layout_toEndOf="@+id/lblHoraIni" />
+        android:layout_toEndOf="@+id/lblHoraIni"
+        android:hint="24:00"/>
 
 
 </android.support.percent.PercentRelativeLayout>

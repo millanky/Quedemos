@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/frameAddFriend">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_friend"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:paddingLeft="40dp"
+                android:paddingRight="10dp"
+                android:id="@+id/buttonAddFriends"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_search"
+            android:tint="@color/caldroid_black"
+            android:layout_alignStart="@+id/buttonAddFriends"
+            android:layout_alignLeft="@+id/buttonAddFriends"
+            android:layout_gravity="left|center_vertical" />
+
+    </FrameLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listadoAmigosAdded"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/frameAddFriend">
+    </ListView>
+
+</RelativeLayout>

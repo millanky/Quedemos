@@ -344,12 +344,11 @@ public class MainActivity extends AppCompatActivity {
                 return new FragmentCalendar();
             }
             if (position == 1) {
-                return new FragmentGroups();
+                return new FragmentQuedadas();
             }
             else {
                 return new FragmentAmigos();
             }
-            //return TabFragment.newInstance(position);
         }
 
     }
@@ -391,12 +390,10 @@ public class MainActivity extends AppCompatActivity {
             logout();
             return true;
         } else if (id == R.id.acerca){
-            //Intent i = new Intent(this, MiCuentaActivity.class);
-            //startActivity(i);
+            Intent i = new Intent(this, AcercaDeActivity.class);
+            startActivity(i);
         }
         else if (id == R.id.apariencia){
-            //Intent i = new Intent(this, MiCuentaActivity.class);
-            //startActivity(i);
             cambiarApariencia();
         }
         else if (id == R.id.cuenta){

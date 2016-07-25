@@ -15,6 +15,8 @@ public class Amigo {
         this.id = id;
     }
 
+    public Amigo() {}
+
     public String getNombre() {
         return nombre;
     }

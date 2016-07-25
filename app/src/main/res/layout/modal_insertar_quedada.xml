@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <android.support.design.widget.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="1"
+        android:id="@+id/nombre"
+        android:hint="@string/nombre"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_compat"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:layout_below="@+id/nombre"
+        android:textSize="18sp"
+        android:id="@+id/lblIntervalo"
+        android:paddingTop="10dp"
+        android:paddingBottom="25dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="30%"
+        android:text="@string/fecha_inicio"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/lblIntervalo"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/lblFechaIni"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="30%"
+        android:layout_marginTop="15dp"
+        android:text="@string/fecha_fin"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/lblFechaIni"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/lblFechaFin"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="40%"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/inputFechaIni"
+        android:layout_toRightOf="@+id/lblFechaIni"
+        android:layout_alignBottom="@+id/lblFechaIni"
+        android:hint="dd/mm/aaaa"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="40%"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/inputFechaFin"
+        android:layout_toRightOf="@+id/lblFechaFin"
+        android:layout_alignBottom="@+id/lblFechaFin"
+        android:hint="dd/mm/aaaa"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkFinde"
+        android:layout_below="@+id/inputFechaFin"
+        android:layout_alignLeft="@+id/inputFechaFin"
+        android:text="@string/finde_solo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_horario"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:layout_below="@+id/checkFinde"
+        android:textSize="18sp"
+        android:id="@+id/lblHorario"
+        android:paddingTop="10dp"
+        android:paddingBottom="15dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioHorario"
+        android:layout_below="@+id/lblHorario"
+        android:checkedButton="@+id/timeDesayuno">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/desayuno"
+            android:id="@+id/timeDesayuno"
+            android:layout_marginLeft="20dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/almuerzo"
+            android:id="@+id/timeAlmuerzo"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/timeDesayuno"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comida"
+            android:id="@+id/timeComida"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/timeAlmuerzo"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/caf_merienda"
+            android:id="@+id/timeCafe"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/timeComida"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/copas"
+            android:id="@+id/timeCopas"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/timeCafe"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cena"
+            android:id="@+id/timeCena"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/timeCopas"/>
+
+    </RadioGroup>
+
+</android.support.percent.PercentRelativeLayout>

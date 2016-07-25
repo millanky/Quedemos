@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +30,8 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
             " nombre TEXT, hora_ini TEXT, hora_fin TEXT, dd TEXT, mm TEXT, yyyy TEXT, quedada INTEGER)";
     private static final String tablaAmigos = "CREATE TABLE amigos (" +
             " nombre TEXT, id TEXT, urlimg TEXT)";
+    private static final String tablaQuedadas = "CREATE TABLE quedadas (" +
+            " nombre TEXT, fecha_ini TEXT, fecha_fin TEXT, hora_ini TEXT, hora_fin TEXT, solo_finde INTEGER, participantes TEXT)";
 
     //CONSTRUCTOR
     public BaseDatosUsuario (Context context) {
@@ -36,11 +40,13 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(tablaEventos);
         db.execSQL(tablaAmigos);
+        db.execSQL(tablaQuedadas);
     }
 
     public void onUpgrade(SQLiteDatabase db, int Oversion, int Nversion) {
         db.execSQL("DROP TABLE IF EXISTS" + tablaEventos); //tiramos la tabla y la volvemos a crear
         db.execSQL("DROP TABLE IF EXISTS" + tablaAmigos);
+        db.execSQL("DROP TABLE IF EXISTS" + tablaQuedadas);
         onCreate(db);
     }
 
@@ -70,7 +76,24 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
 
             existe = true;
         }
+        c.close();db.close();
+
         return existe;
+    }
+
+    public Amigo datosAmigo (String nombre) {
+        Amigo a = new Amigo();
+        SQLiteDatabase db = getReadableDatabase();
+        String[] FIELDS = {"nombre","id", "urlimg"};
+        Cursor c = db.query("amigos", FIELDS, "nombre=?", new String[]{nombre}, null, null, null, null);
+        c.moveToFirst();
+        if (c.getCount() > 0){
+            a.setNombre(c.getString(0));
+            a.setId(c.getString(1));
+            a.setUrlimg(c.getString(2));
+        }
+        c.close();db.close();
+        return a;
     }
 
     public ArrayList<Amigo> mostrarAmigos () {
@@ -88,8 +111,31 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
                 listadoAmigos.add(a);
             } while (c.moveToNext());
         }
+        c.close();db.close();
 
         return listadoAmigos;
+    }
+
+    //--------------------------- Q U E D A D A S ------------------------------------//
+
+    public void nuevaQuedada (String nombre, String fechaIni, String fechaFin, String horaIni, String horafin, int soloFinde,  ArrayList<Amigo> participantes) {
+        SQLiteDatabase db = getWritableDatabase();
+        if (db != null) {
+            ContentValues quedada = new ContentValues();
+            quedada.put("nombre",nombre);
+            quedada.put("fecha_ini",fechaIni);
+            quedada.put("fecha_fin",fechaFin);
+            quedada.put("hora_ini",horaIni);
+            quedada.put("hora_fin",horafin);
+            quedada.put("solo_finde",soloFinde);
+
+            Gson gson = new Gson();
+            String participantesString= gson.toJson(participantes);
+            quedada.put("participantes",participantesString);
+
+            db.insert("quedadas",null,quedada);
+        }
+        db.close();
     }
 
     //--------------------------- E V E N T O S --------------------------------------//
@@ -199,26 +245,6 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
         return eventoExist;
     }
 
-/*
-    public void getEventoPorFecha(String fecha) {
-
-        SQLiteDatabase db = getReadableDatabase();
-        String[] FIELDS = {"nombre", "hora_ini", "hora_fin", "fecha"};
-
-        Cursor c = db.query("eventos", FIELDS, "fecha=?", new String[]{fecha}, null, null, null, null);
-        c.moveToFirst();
-
-        if (c.getCount()>0) { //si hay usuarios registrados
-
-            do {
-                Log.e("Nombre: ", c.getString(0) + " / " + c.getString(1) + " / " +  c.getString(2) + " / " + c.getString(3));
-
-            }while(c.moveToNext());
-
-            db.close();
-            c.close();
-        }
-    }*/
 
     /************** MÉTODOS COMPARACIÓN HORAS ****************/
 

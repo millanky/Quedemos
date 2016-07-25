@@ -10,6 +10,8 @@
     <color name="green">#ffCCFFCC</color>
     <color name="red">#CC0000</color>
     <color name="white">#ffffff</color>
+    <color name="translucentWhite">#66ffffff</color>
+    <color name="translucentPrimaryDark">#66303F9F</color>
 
     <color name="calendar_base">#F2F3FA</color>
 
