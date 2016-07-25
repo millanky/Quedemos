@@ -50,7 +50,7 @@ public class AmigosAdapter extends ArrayAdapter<Amigo> {
 
 
         nombre.setText(getItem(pos).getNombre());
-       // new downloadTask().execute(getItem(pos).getUrlimg());
+
 
         Picasso.with(getContext())
                 .load(getItem(pos).getUrlimg())

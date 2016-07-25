@@ -138,6 +138,26 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
         db.close();
     }
 
+    public ArrayList<Quedada> mostrarQuedadas () {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] FIELDS = {"nombre","fecha_ini","fecha_fin","hora_ini","hora_fin","solo_finde","participantes"};
+
+        ArrayList<Quedada> listadoQuedadas = new ArrayList<Quedada>();
+
+        Cursor c = db.query("quedadas", FIELDS, null, null, null, null, null, null);
+        c.moveToFirst();
+
+        if (db != null && c.getCount()>0) {
+            do {
+                //Quedada q = new Quedada(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getInt(5), c.getString(6));
+              //  listadoAmigos.add(a);
+            } while (c.moveToNext());
+        }
+        c.close();db.close();
+
+        return listadoQuedadas;
+    }
+
     //--------------------------- E V E N T O S --------------------------------------//
 
     public void nuevoEvento(String nombre, String horaIni, String horaFin, String[] fecha, int quedada) {
