@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ActivitiesAndFragments.MainActivity">
+
+    <item
+        android:title="@string/mi_cuenta"
+        android:id="@+id/cuenta" />
+    <item
+        android:title="@string/apariencia"
+        android:id="@+id/apariencia" />
+    <item
+        android:title="@string/acerca_de"
+        android:id="@+id/acerca" />
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:title="@string/logout_menu" />
+</menu>

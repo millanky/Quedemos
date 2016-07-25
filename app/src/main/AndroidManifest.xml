@@ -17,16 +17,16 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <!--
-        SPLASH SCREEN
-        <activity android:name=".SplashScreen">
+
+        <!--SPLASH SCREEN-->
+        <activity android:name=".ActivitiesAndFragments.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        -->
+
 
 
         <!-- ".InicioSesion.ChooserActivity" -->
@@ -36,33 +36,22 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
-            android:name=".ActivitiesAndFragments.AmigosActivity"
+            android:name=".ActivitiesAndFragments.MiCuentaActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="Amigos"
+            android:label="Mi cuenta"
             android:parentActivityName=".ActivitiesAndFragments.MainActivity">
         </activity>
 
-        <activity android:name=".SinUso.PagerTabActivity"
-            android:label="Pager" />
-
-        <!-- GOOGLE -->
         <activity
-            android:name=".InicioSesion.GoogleSignInActivity"
-            android:label="@string/label_google_sign_in" />
+            android:name=".ActivitiesAndFragments.AcercaDeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="Mi cuenta"
+            android:parentActivityName=".ActivitiesAndFragments.MainActivity">
+        </activity>
 
-        <!-- EMAIL -->
-        <activity
-            android:name=".SinUso.EmailPasswordActivity"
-            android:label="@string/label_emailpassword"
-            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <!-- FACEBOOK -->
         <activity
@@ -79,6 +68,11 @@
             android:name=".SinUso.FacebookLoginActivity"
             android:label="@string/label_facebook_login" />
 
+        <!-- GOOGLE -->
+        <activity
+            android:name=".InicioSesion.GoogleSignInActivity"
+            android:label="@string/label_google_sign_in" />
+
         <!-- NOTIFICATION SERVICES -->
 
         <service android:name=".PushNotifications.NotificationService" >
@@ -91,6 +85,15 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <!-- <activity android:name=".SinUso.PagerTabActivity"
+            android:label="Pager" />-->
+
+        <!-- EMAIL
+        <activity
+            android:name=".SinUso.EmailPasswordActivity"
+            android:label="@string/label_emailpassword"
+            android:windowSoftInputMode="stateAlwaysHidden" />-->
     </application>
 
 </manifest>

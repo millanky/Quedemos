@@ -1,16 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SinUso.MainActivity4">
+    tools:context=".ActivitiesAndFragments.MainActivity">
 
     <item
-        android:title="Mi cuenta"
-        android:id="@+id/cuenta"/>
-    <item
-        android:title="@string/amigos"
-        android:id="@+id/amigos"/>
-    <item
-        android:id="@+id/logout"
-        android:orderInCategory="100"
-        android:title="@string/logout_menu" />
+        android:title="Acerca de"
+        android:id="@+id/acerca" />
 </menu>

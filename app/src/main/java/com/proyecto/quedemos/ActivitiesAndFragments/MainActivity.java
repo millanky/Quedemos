@@ -29,14 +29,13 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.proyecto.quedemos.InicioSesion.FacebookLoginFragment;
 import com.proyecto.quedemos.InicioSesion.GoogleSignInActivity;
 import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.RestAPI.Endpoints;
 import com.proyecto.quedemos.RestAPI.adapter.RestApiAdapter;
 import com.proyecto.quedemos.RestAPI.model.UsuarioResponse;
-import com.proyecto.quedemos.Utils;
+import com.proyecto.quedemos.VisualResources.Utils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (isLogued()) {
             //enviamos token
-            enviarToken();
+            enviarDatosUsuarioFirebase();
 
             //customizamos view
-            setContentView(R.layout.custom_view);
+            setContentView(R.layout.activity_main_logued);
             getSupportActionBar().setTitle(user);
 
             tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -150,15 +149,20 @@ public class MainActivity extends AppCompatActivity {
 
     // ----------- GUARDAR TOKEN ------------
 
-    public void enviarToken() {
+    public void enviarDatosUsuarioFirebase() {
 
         //SOLICITAMOS EL TOKEN
-        String token = FirebaseInstanceId.getInstance().getToken();
-        String tokenAlmacenado = prefs.getString("token","");
-        if (tokenAlmacenado == "") {
-            enviarTokenRegistro(token, prefs.getString("user",""),prefs.getString("picture",""));
-        } else if (!tokenAlmacenado.equals(token)) {
-            actualizarTokenRegistro(prefs.getString("databaseID",""),token);
+        //String token = FirebaseInstanceId.getInstance().getToken();
+        String tokenRecibido = prefs.getString("token","");
+        String tokenAlmacenado = prefs.getString("tokenUltimo","");
+
+        if (tokenRecibido == "") {
+            Toast.makeText(this, "No se ha podido recibir el Token del dispositivo, no podrá recibir notificaciones.",
+                    Toast.LENGTH_SHORT).show();
+        }else if (tokenAlmacenado == "") {
+            enviarTokenRegistro(tokenRecibido, prefs.getString("user",""),prefs.getString("picture",""));
+        } else if (!tokenAlmacenado.equals(tokenRecibido)) {
+            actualizarTokenRegistro(prefs.getString("databaseID",""),tokenRecibido);
         }
     }
 
@@ -172,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
                 UsuarioResponse usuarioResponse = response.body();
 
-                prefs.edit().putString("token", usuarioResponse.getToken()).apply();
+                prefs.edit().putString("tokenUltimo", usuarioResponse.getToken()).apply();
                 prefs.edit().putString("databaseID", usuarioResponse.getId()).apply();
 
                 Log.d("ID_FIREBASE", usuarioResponse.getId());
@@ -318,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = { "Calendario", "Quedadas", "Opciones"};
+        private final String[] TITLES = { "Calendario", "Quedadas", "Amigos"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -343,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 return new FragmentGroups();
             }
             else {
-                return new FragmentOptions();
+                return new FragmentAmigos();
             }
             //return TabFragment.newInstance(position);
         }
@@ -352,14 +356,15 @@ public class MainActivity extends AppCompatActivity {
 
     //-------------- MODALVIEW CAMBIAR APARIENCIA ---------
 
-    public void cambiarApariencia (View v) {
+    public void cambiarApariencia () {
         cambiarColorDialog.show();
     }
 
     private void construirDialogoApariencia () {
         cambiarColorDialog = new MaterialDialog.Builder(this)
                 .title("Elige un color")
-                .customView(R.layout.paleta_colores, true)
+                .icon(getResources().getDrawable(R.drawable.apariencia))
+                .customView(R.layout.modal_paleta_colores, true)
                 .positiveText("Cerrar")
                 .build();
     }
@@ -368,8 +373,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //DISTINTO MENU SEGUN USUARIO LOGUEADO? *******************************
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //DISTINTO MENU SEGUN USUARIO LOGUEADO
+        if (isLogued()) {
+            getMenuInflater().inflate(R.menu.menu_logued, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        }
         return true;
     }
 
@@ -381,8 +390,17 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.logout) {
             logout();
             return true;
-        } else if (id == R.id.amigos){
-            Intent i = new Intent(this, AmigosActivity.class);
+        } else if (id == R.id.acerca){
+            //Intent i = new Intent(this, MiCuentaActivity.class);
+            //startActivity(i);
+        }
+        else if (id == R.id.apariencia){
+            //Intent i = new Intent(this, MiCuentaActivity.class);
+            //startActivity(i);
+            cambiarApariencia();
+        }
+        else if (id == R.id.cuenta){
+            Intent i = new Intent(this, MiCuentaActivity.class);
             startActivity(i);
         }
 

@@ -1,5 +1,9 @@
 package com.proyecto.quedemos.PushNotifications;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -20,7 +24,9 @@ public class NotificationIDTokenService extends FirebaseInstanceIdService {
         enviarTokenRegistro(token);
     }
 
-    private void enviarTokenRegistro(String token) { //enviar registro al servidor
+    private void enviarTokenRegistro(String token) { //guardar en las shared preferences para cuando el usuario haya iniciado sesion
+        SharedPreferences prefs = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+        prefs.edit().putString("token", token).commit();
         Log.e(TAG,token);
     }
 }

@@ -44,7 +44,7 @@ public class FragmentGroups extends Fragment {
             public void onClick(View view) {
                new MaterialDialog.Builder(getContext())
                         .title("Hola")
-                        .customView(R.layout.custom_view, true) //true indica con ScrollView
+                        .customView(R.layout.activity_main_logued, true) //true indica con ScrollView
                         .positiveText("Aceptar")
                         .show();
 

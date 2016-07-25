@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.proyecto.quedemos.ActivitiesAndFragments.MainActivity;
 import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.SinUso.MainActivity2;
 
@@ -28,13 +29,13 @@ public class NotificationService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
 
-        Intent i = new Intent(this, MainActivity2.class); //a donde dirijo al hacer click en la notificacion
+        Intent i = new Intent(this, MainActivity.class); //a donde dirijo al hacer click en la notificacion
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
         //lo que recibe?
 
         Uri sonido = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION); //lo que el usuario tenga puesto para notifiacioes
         NotificationCompat.Builder notificacion = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.q_logo)
+                .setSmallIcon(R.drawable.q_logo_sin_fondo)
                 .setContentTitle("Notificacion")
                 .setContentText(remoteMessage.getNotification().getBody())
                 .setSound(sonido)

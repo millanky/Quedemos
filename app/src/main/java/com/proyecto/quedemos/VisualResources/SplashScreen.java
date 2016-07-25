@@ -1,9 +1,10 @@
-package com.proyecto.quedemos;
+package com.proyecto.quedemos.VisualResources;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.SinUso.MainActivity4;
 
 /**

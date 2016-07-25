@@ -26,8 +26,8 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
 
     private static final String tablaEventos = "CREATE TABLE eventos (id INTEGER PRIMARY KEY AUTOINCREMENT," +
             " nombre TEXT, hora_ini TEXT, hora_fin TEXT, dd TEXT, mm TEXT, yyyy TEXT, quedada INTEGER)";
-    private static final String tablaAmigos = "CREATE TABLE amigos (id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            " nombre TEXT, token TEXT, urlimg TEXT)";
+    private static final String tablaAmigos = "CREATE TABLE amigos (" +
+            " nombre TEXT, id TEXT, urlimg TEXT)";
 
     //CONSTRUCTOR
     public BaseDatosUsuario (Context context) {
@@ -46,14 +46,14 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
 
     //----------------------------- A M I G O S --------------------------------------//
 
-    public void nuevoAmigo (String token, String nombre, String urlimg) {
+    public void nuevoAmigo (String id, String nombre, String urlimg) {
         SQLiteDatabase db = getWritableDatabase();
 
         if (db != null) {
             ContentValues amigo = new ContentValues();
             amigo.put("nombre", nombre);
             amigo.put("urlimg", urlimg);
-            amigo.put("token", token);
+            amigo.put("id", id);
             db.insert("amigos", null, amigo);
         }
         db.close();
@@ -75,7 +75,7 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
 
     public ArrayList<Amigo> mostrarAmigos () {
         SQLiteDatabase db = getReadableDatabase();
-        String[] FIELDS = {"nombre","urlimg","token"};
+        String[] FIELDS = {"nombre","urlimg","id"};
 
         ArrayList<Amigo> listadoAmigos = new ArrayList<Amigo>();
 

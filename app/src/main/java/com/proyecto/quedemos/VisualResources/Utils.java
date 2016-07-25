@@ -1,7 +1,9 @@
-package com.proyecto.quedemos;
+package com.proyecto.quedemos.VisualResources;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+
+import com.proyecto.quedemos.R;
 
 public class Utils
 {

@@ -7,12 +7,12 @@ public class Amigo {
 
     private String nombre;
     private String urlimg;
-    private String token;
+    private String id;
 
-    public Amigo (String nombre, String urlimg, String token){
+    public Amigo (String nombre, String urlimg, String id){
         this.nombre = nombre;
         this.urlimg = urlimg;
-        this.token = token;
+        this.id = id;
     }
 
     public String getNombre() {
@@ -31,11 +31,11 @@ public class Amigo {
         this.urlimg = urlimg;
     }
 
-    public String getToken() {
-        return token;
+    public String getId() {
+        return id;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setId(String id) {
+        this.id = id;
     }
 }

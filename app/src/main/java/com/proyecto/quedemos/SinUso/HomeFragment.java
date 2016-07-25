@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment {
                 case 1:
                     return new FragmentGroups();
                 case 2:
-                    return new FragmentOptions();
+                    return new FragmentAmigos();
                 default:
                     return null;
             }

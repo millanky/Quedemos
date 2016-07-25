@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonAddFriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_menu_search"
+        android:baselineAlignBottom="true"
+        android:clickable="true"
+        android:tint="@android:color/white"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/buttonAddFriends"
+        android:layout_height="match_parent"
+        android:id="@+id/listadoAmigos"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp">
+    </ListView>
+
+</android.support.design.widget.CoordinatorLayout >

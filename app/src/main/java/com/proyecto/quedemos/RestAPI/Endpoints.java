@@ -25,6 +25,9 @@ public interface Endpoints {
     @GET(ConstantesRestAPI.KEY_FIND_FRIEND)
     Call<UsuarioResponse> buscarAmigos (@Path("nombre") String nombre);
 
+    @GET(ConstantesRestAPI.KEY_TOQUE_AMIGO)
+    Call<UsuarioResponse> toqueAmigo (@Path("id") String id, @Path("nombre") String nombre);
+
     @GET(ConstantesRestAPI.KEY_TOQUE_ANIMAL)
     Call<UsuarioResponse> toqueAnimal(@Path("id") String id, @Path("animal") String animal);
 }

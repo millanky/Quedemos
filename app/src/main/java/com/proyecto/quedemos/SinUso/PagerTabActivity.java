@@ -54,7 +54,7 @@ public class PagerTabActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.q_logo);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.custom_view);
+        setContentView(R.layout.activity_main_logued);
 
 
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
