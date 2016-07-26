@@ -31,7 +31,6 @@ public class NotificationIDTokenService extends FirebaseInstanceIdService {
         prefs.edit().putString("token", token).commit(); //guardo el token cada vez que recibo uno nuevo
 
         String idFirebase = prefs.getString("databaseID","");
-        String tokenUltimo = prefs.getString("tokenUltimo","");
 
         if (!idFirebase.equals("")) {//si hay ID almacenado es que ya se han subido datos a firebase
             MainActivity.actualizarTokenRegistro(idFirebase,token);

@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private String user;
     private Profile profile = null;
     private static SharedPreferences prefs;
-    private boolean existeUsuario = false;
     private final Handler handler = new Handler();
 
     private PagerSlidingTabStrip tabs;
@@ -152,19 +151,23 @@ public class MainActivity extends AppCompatActivity {
     // --------------------- GUARDAR TOKEN FIREBASE -----------------------
 
     public void enviarDatosUsuarioFirebase() {
+        //MIRAMOS SI YA HAY ALGUIEN EN LA BBDD CON ESE NOMBRE
+        userExists(prefs.getString("facebookId",""));
+    }
+
+    public void guardarActualizarToken() {
 
         //SOLICITAMOS EL TOKEN
         String tokenRecibido = prefs.getString("token","");
         String tokenAlmacenado = prefs.getString("tokenUltimo","");
 
-        //MIRAMOS SI YA HAY ALGUIEN EN LA BBDD CON ESE NOMBRE
-
+        //GUARDAR/ACTUALIZAR TOKEN
         if (tokenRecibido.equals("")) {
             Toast.makeText(this, "No se ha podido recibir el Token del dispositivo, no podrá recibir notificaciones.",
                     Toast.LENGTH_SHORT).show();
             enviarTokenRegistro("", prefs.getString("user",""), prefs.getString("picture","")); //dejo el campo del token vacío para actualizar más tarde
         }else if (tokenAlmacenado.equals("")) {
-            enviarTokenRegistro(tokenRecibido, prefs.getString("user",""),prefs.getString("picture","")); //primera vez que recibo el token
+            enviarTokenRegistro(tokenRecibido, prefs.getString("user",""),prefs.getString("picture","")); //primera vez que recibo el token y aun no he iniciado sesion
         } else if (!tokenAlmacenado.equals(tokenRecibido)) {
             actualizarTokenRegistro(prefs.getString("databaseID",""),tokenRecibido); //actualizacion token
         }
@@ -223,9 +226,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //-------------------- REST - BUSCAR SI YA EXISTE ESE USUARIO EN FIREBASE --------------------
-    private boolean userExists (final String idFacebook) {
 
-        existeUsuario = false;
+    private void userExists (final String idFacebook) {
 
         RestApiAdapter restApiAdapter = new RestApiAdapter();
         Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
@@ -233,35 +235,25 @@ public class MainActivity extends AppCompatActivity {
 
         usuarioResponseCallFindFriends.enqueue(new Callback<UsuarioResponse>() {
             @Override
-            public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) { //TODO: IMPLEMENTAR PARTE DEL SERVIDOR, QUE DEVUELVA USER Y FACEBOOKID AL MENOS
+            public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
                 UsuarioResponse usuarioResponse = response.body();
 
-                if (response.body() != null){ //Guardamos en la bdd de amigos
+                if (response.body() != null && usuarioResponse.getId() != ""){ //Guardamos en la bdd de amigos
 
-                    Log.e("USUARIO",usuarioResponse.getNombre());
+                    prefs.edit().putString("databaseID","").apply();
+                    actualizarTokenRegistro(usuarioResponse.getId(),prefs.getString("token",""));
 
-                    if (prefs.getString("facebookid","").equals(usuarioResponse.getFacebookid())){
-                        Toast.makeText(getApplicationContext(), "YA EXISTE USUARIO.", Toast.LENGTH_LONG).show();
-                        existeUsuario = true;
-                        //TODO: actualizar token
-                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Usuario no encontrado.",
-                            Toast.LENGTH_LONG).show();
+                    guardarActualizarToken();
                 }
             }
-
             @Override
             public void onFailure(Call<UsuarioResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Usuario no encontrado.",
-                        Toast.LENGTH_LONG).show();
+                guardarActualizarToken();
             }
         });
 
-        return existeUsuario;
     }
-
-
 
 
     //------------------- C A M B I A R  C O L O R ----------------
