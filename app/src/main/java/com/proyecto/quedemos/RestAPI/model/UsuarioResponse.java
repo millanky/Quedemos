@@ -9,6 +9,7 @@ public class UsuarioResponse {
     private String token;
     private String nombre;
     private String urlimg;
+    private String facebookid;
 
     public UsuarioResponse(String token, String id, String nombre) {
         this.token = token;
@@ -49,5 +50,13 @@ public class UsuarioResponse {
 
     public void setUrl_img(String url_img) {
         this.urlimg = url_img;
+    }
+
+    public String getFacebookid() {
+        return facebookid;
+    }
+
+    public void setFacebookid(String facebookid) {
+        this.facebookid = facebookid;
     }
 }

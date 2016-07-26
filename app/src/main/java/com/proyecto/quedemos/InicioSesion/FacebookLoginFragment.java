@@ -94,10 +94,12 @@ public class FacebookLoginFragment extends Fragment {
             //Guardo datos de usuario en las shared preferences
             String user = profile.getName().toString();
             String pictureUri = profile.getProfilePictureUri(400,400).toString();
+            String facebookId = profile.getId();
             SharedPreferences prefs = getActivity().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = prefs.edit();
             edit.putString("user", user);
             edit.putString("picture", pictureUri);
+            edit.putString("facebookId", facebookId);
             edit.commit();
 
             Intent intent = new Intent(getActivity(), MainActivity.class);

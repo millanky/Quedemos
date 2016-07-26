@@ -26,23 +26,72 @@ public class NotificationService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //super.onMessageReceived(remoteMessage);
 
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+        if (remoteMessage.getNotification().getTitle().equals("Quedemos!")) {  //UN TOQUE
 
-        Intent i = new Intent(this, MainActivity.class); //a donde dirijo al hacer click en la notificacion
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
-        //lo que recibe?
+            Intent i = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
 
-        Uri sonido = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION); //lo que el usuario tenga puesto para notifiacioes
-        NotificationCompat.Builder notificacion = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.q_logo_sin_fondo)
-                .setContentTitle("Notificacion")
-                .setContentText(remoteMessage.getNotification().getBody())
-                .setSound(sonido)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true); //que se pueda cancelar
+            String stringColor = remoteMessage.getNotification().getColor();
+            int color = Integer.parseInt(stringColor.replaceFirst("^#", ""), 16);
+            Uri sonido = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION); //lo que el usuario tenga puesto para notifiacioes
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notificacion.build()); //construye la notificacion que hemos creado arriba con un identificador (0)
+            NotificationCompat.Builder notificacion = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.q_logo_sin_fondo)
+                    .setContentTitle(remoteMessage.getNotification().getTitle())
+                    .setContentText(remoteMessage.getNotification().getBody())
+                    .setSound(sonido)
+                    .setContentIntent(pendingIntent)
+                    .setColor(color)
+                    .setAutoCancel(true);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(0,notificacion.build());
+
+        } else if (remoteMessage.getNotification().getTitle().equals("Inivitación quedada")) {  //NUEVA QUEDADA
+
+            Intent i = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
+
+            String stringColor = remoteMessage.getNotification().getColor();
+            int color = Integer.parseInt(stringColor.replaceFirst("^#", ""), 16);
+            Uri sonido = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+            NotificationCompat.Builder notificacion = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.q_logo_sin_fondo)
+                    .setContentTitle(remoteMessage.getNotification().getTitle())
+                    .setContentText(remoteMessage.getNotification().getBody())
+                    .setSound(sonido)
+                    .setContentIntent(pendingIntent)
+                    .setColor(color)
+                    .setAutoCancel(true);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(0,notificacion.build());
+
+        } else { //CUALQUIER OTRA NOTIFICACION
+
+            Log.d(TAG, "From: " + remoteMessage.getFrom());
+            Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+
+            Intent i = new Intent(this, MainActivity.class); //a donde dirijo al hacer click en la notificacion
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
+
+            String stringColor = "#b2ff66";
+            int color = Integer.parseInt(stringColor.replaceFirst("^#", ""), 16);
+
+            Uri sonido = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION); //lo que el usuario tenga puesto para notifiacioes
+            NotificationCompat.Builder notificacion = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.q_logo_sin_fondo)
+                    .setContentTitle("Notificacion")
+                    .setContentText(remoteMessage.getNotification().getBody())
+                    .setSound(sonido)
+                    .setColor(color)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true); //que se pueda cancelar
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(0, notificacion.build()); //construye la notificacion que hemos creado arriba con un identificador (0
+        }
     }
+
 }

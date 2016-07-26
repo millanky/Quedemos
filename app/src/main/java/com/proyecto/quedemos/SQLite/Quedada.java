@@ -15,9 +15,10 @@ public class Quedada {
     private String horaIni;
     private String horaFin;
     private boolean soloFinde;
-    private ArrayList<String> participantes;
+    private ArrayList<Amigo> participantes;
+    private String idFirebaseQuedada;
 
-    public Quedada (String nombre, String fechaIni, String fechaFin, String horaIni, String horaFin, boolean soloFinde, ArrayList<String> participantes){
+    public Quedada (String nombre, String fechaIni, String fechaFin, String horaIni, String horaFin, boolean soloFinde, ArrayList<Amigo> participantes){
         this.nombre = nombre;
         this.fechaIni = fechaIni;
         this.fechaFin = fechaFin;
@@ -26,6 +27,8 @@ public class Quedada {
         this.soloFinde = soloFinde;
         this.participantes = participantes;
     }
+
+    public Quedada(){}
 
     public String getNombre() {
         return nombre;
@@ -67,11 +70,11 @@ public class Quedada {
         this.horaFin = horaFin;
     }
 
-    public ArrayList<String> getParticipantes() {
+    public ArrayList<Amigo> getParticipantes() {
         return participantes;
     }
 
-    public void setParticipantes(ArrayList<String> participantes) {
+    public void setParticipantes(ArrayList<Amigo> participantes) {
         this.participantes = participantes;
     }
 
@@ -81,5 +84,13 @@ public class Quedada {
 
     public void setSoloFinde(boolean soloFinde) {
         this.soloFinde = soloFinde;
+    }
+
+    public String getIdFirebaseQuedada() {
+        return idFirebaseQuedada;
+    }
+
+    public void setIdFirebaseQuedada(String idFirebaseQuedada) {
+        this.idFirebaseQuedada = idFirebaseQuedada;
     }
 }

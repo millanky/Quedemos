@@ -187,14 +187,14 @@ public class FragmentAmigos extends Fragment {
 
     //********************** TOQUE PUSH NOTIFICATION - FIREBASE CLOUD MESSAGING **************************//
 
-    public void toqueAmigo(String token, String emisor) {
+    public void toqueAmigo(String idReceptor, String emisor) {
 
-        String tokenPush = token;
+        String idReceptorPush = idReceptor;
         String emisorPush = emisor;
 
         RestApiAdapter restApiAdapter = new RestApiAdapter();
         Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
-        Call<UsuarioResponse> usuarioResponseCall = endpoints.toqueAmigo(tokenPush, emisorPush);
+        Call<UsuarioResponse> usuarioResponseCall = endpoints.toqueAmigo(idReceptorPush, emisorPush);
 
         usuarioResponseCall.enqueue(new Callback<UsuarioResponse>() {
             @Override

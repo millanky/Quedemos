@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,8 +32,8 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
             " nombre TEXT, hora_ini TEXT, hora_fin TEXT, dd TEXT, mm TEXT, yyyy TEXT, quedada INTEGER)";
     private static final String tablaAmigos = "CREATE TABLE amigos (" +
             " nombre TEXT, id TEXT, urlimg TEXT)";
-    private static final String tablaQuedadas = "CREATE TABLE quedadas (" +
-            " nombre TEXT, fecha_ini TEXT, fecha_fin TEXT, hora_ini TEXT, hora_fin TEXT, solo_finde INTEGER, participantes TEXT)";
+    private static final String tablaQuedadas = "CREATE TABLE quedadas (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " nombre TEXT, fecha_ini TEXT, fecha_fin TEXT, hora_ini TEXT, hora_fin TEXT, solo_finde INTEGER, participantes TEXT, id_firebase TEXT)";
 
     //CONSTRUCTOR
     public BaseDatosUsuario (Context context) {
@@ -118,8 +120,9 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
 
     //--------------------------- Q U E D A D A S ------------------------------------//
 
-    public void nuevaQuedada (String nombre, String fechaIni, String fechaFin, String horaIni, String horafin, int soloFinde,  ArrayList<Amigo> participantes) {
+    public long nuevaQuedada (String nombre, String fechaIni, String fechaFin, String horaIni, String horafin, int soloFinde,  ArrayList<Amigo> participantes, String idFirebase) {
         SQLiteDatabase db = getWritableDatabase();
+        long idSQL = 0;
         if (db != null) {
             ContentValues quedada = new ContentValues();
             quedada.put("nombre",nombre);
@@ -128,13 +131,76 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
             quedada.put("hora_ini",horaIni);
             quedada.put("hora_fin",horafin);
             quedada.put("solo_finde",soloFinde);
+            quedada.put("id_firebase", ""); //inicializo vacío hasta que el servidor me devuelva el ID
 
             Gson gson = new Gson();
             String participantesString= gson.toJson(participantes);
             quedada.put("participantes",participantesString);
 
-            db.insert("quedadas",null,quedada);
+            idSQL = db.insert("quedadas",null,quedada);
         }
+        db.close();
+        return idSQL;
+    }
+
+    public Quedada getQuedadaById (long idSQL) {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Quedada q = new Quedada();
+        String strID = Long.toString(idSQL);
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Amigo>>() {}.getType();
+        String[] FIELDS = {"nombre","fecha_ini","fecha_fin","hora_ini","hora_fin","solo_finde","participantes"};
+
+        Cursor c = db.query("quedadas", FIELDS, "id=?",  new String[]{strID}, null, null, null, null);
+        c.moveToFirst();
+        if (db != null && c.getCount()>0) {
+
+            q.setNombre(c.getString(0)); q.setFechaIni(c.getString(1)); q.setFechaFin(c.getString(2));
+            q.setHoraIni(c.getString(3)); q.setHoraFin(c.getString(4));
+
+            if (c.getInt(5) == 1) { q.setSoloFinde(true);} else {q.setSoloFinde(false);}
+
+            ArrayList<Amigo> amigosParticipantes = gson.fromJson(c.getString(6),type);
+            q.setParticipantes(amigosParticipantes);
+        }
+        c.close(); db.close();
+
+        return q;
+    }
+
+    public ArrayList<Amigo> getParticipantesQuedada (long idSQL) {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Amigo>>() {}.getType();
+        String strID = Long.toString(idSQL);
+        ArrayList<Amigo> participantesQuedada = new ArrayList<Amigo>();
+        String[] FIELDS = {"participantes"};
+
+        Cursor c = db.query("quedadas", FIELDS, "id=?",  new String[]{strID}, null, null, null, null);
+        c.moveToFirst();
+        if (db != null && c.getCount()>0) {
+
+            participantesQuedada = gson.fromJson(c.getString(0),type);
+        }
+        c.close(); db.close();
+
+        return participantesQuedada;
+    }
+
+    public void addIdFirebase (long idSQL, String idFirebase) {
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        String strID = Long.toString(idSQL);
+
+        ContentValues actQuedada = new ContentValues();
+        actQuedada.put("id_firebase", idFirebase);
+        db.update("quedadas", actQuedada, "id=?", new String[]{strID});
+
         db.close();
     }
 
@@ -143,14 +209,21 @@ public class BaseDatosUsuario extends SQLiteOpenHelper {
         String[] FIELDS = {"nombre","fecha_ini","fecha_fin","hora_ini","hora_fin","solo_finde","participantes"};
 
         ArrayList<Quedada> listadoQuedadas = new ArrayList<Quedada>();
+        Type type = new TypeToken<ArrayList<Amigo>>() {}.getType();
+        boolean soloFinde = false;
+        Gson gson = new Gson();
 
         Cursor c = db.query("quedadas", FIELDS, null, null, null, null, null, null);
         c.moveToFirst();
 
         if (db != null && c.getCount()>0) {
             do {
-                //Quedada q = new Quedada(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getInt(5), c.getString(6));
-              //  listadoAmigos.add(a);
+                ArrayList<Amigo> amigosParticipantes = gson.fromJson(c.getString(6),type);
+                if (c.getInt(5) == 1) { soloFinde = true; }
+
+                Quedada q = new Quedada(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), soloFinde, amigosParticipantes);
+                listadoQuedadas.add(q);
+
             } while (c.moveToNext());
         }
         c.close();db.close();

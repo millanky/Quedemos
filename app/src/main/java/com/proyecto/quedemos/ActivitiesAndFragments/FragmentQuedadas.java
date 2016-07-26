@@ -1,5 +1,7 @@
 package com.proyecto.quedemos.ActivitiesAndFragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -21,10 +23,15 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.google.gson.Gson;
 import com.proyecto.quedemos.ArrayAdapters.AmigosAdapter;
 import com.proyecto.quedemos.ArrayAdapters.EventosAdapter;
 import com.proyecto.quedemos.ArrayAdapters.QuedadasAdapter;
 import com.proyecto.quedemos.R;
+import com.proyecto.quedemos.RestAPI.Endpoints;
+import com.proyecto.quedemos.RestAPI.adapter.RestApiAdapter;
+import com.proyecto.quedemos.RestAPI.model.QuedadaResponse;
+import com.proyecto.quedemos.RestAPI.model.UsuarioResponse;
 import com.proyecto.quedemos.SQLite.Amigo;
 import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.proyecto.quedemos.SQLite.Evento;
@@ -34,15 +41,18 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * Created by Usuario on 17/06/2016.
  */
 public class FragmentQuedadas extends Fragment {
 
-    private ArrayList<Evento> eventosList;
-    private EventosAdapter eAdapter;
     private ListView quedadasList;
+    private QuedadasAdapter qAdapter;
     private View positiveAction;
     private EditText fechaIni;
     private EditText fechaFin;
@@ -63,10 +73,19 @@ public class FragmentQuedadas extends Fragment {
         //MOSTRAR LISTADO QUEDADAS
         BaseDatosUsuario BD = new BaseDatosUsuario(getContext());
         quedadasList = (ListView) view.findViewById(R.id.listQuedadas);
-        String dia = "15-07-2016";
-        ArrayList<Quedada> quedadasArrayList = BD.mostrarQuedadas();
-        QuedadasAdapter qAdapter = new QuedadasAdapter(getContext(),R.layout.cell_quedada,quedadasArrayList);
-        quedadasList.setAdapter(eAdapter);
+        mostrarListadoQuedadas(BD.mostrarQuedadas());
+
+
+        quedadasList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int pos,long id) {
+
+                String amigo = qAdapter.getItem(pos).getNombre();
+                Toast.makeText(getContext(), "Amigo "+amigo, Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -79,6 +98,13 @@ public class FragmentQuedadas extends Fragment {
         });
 
         return  view;
+    }
+
+    //----------------------- ADAPTER * LISTAR QUEDADAS -----------------------
+
+    public void mostrarListadoQuedadas (ArrayList<Quedada> listaQuedadas) {
+        qAdapter = new QuedadasAdapter(getContext(),R.layout.cell_quedada,listaQuedadas);
+        quedadasList.setAdapter(qAdapter);
     }
 
     //----------------------- MODAL VIEW * NUEVA QUEDADA -----------------------
@@ -209,8 +235,15 @@ public class FragmentQuedadas extends Fragment {
                             Toast.makeText(getContext(), "No se han añadido amigos", Toast.LENGTH_SHORT).show();
                             addAmigosQuedada(new Amigo());
                         } else {
-                            //TODO: añadir quedada a a la BBDD
-                            BD.nuevaQuedada(nombreQ,fechaInicio,fechaFinal,horaIni,horaFin,soloFindes,amigosQuedada);
+                            //Añado al propio usuario a la quedada:
+                            SharedPreferences prefs = getContext().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+                            Amigo usuario = new Amigo(prefs.getString("user",""), prefs.getString("picture",""), prefs.getString("databaseID",""));
+                            amigosQuedada.add(usuario);
+
+                            long idSQL = BD.nuevaQuedada(nombreQ,fechaInicio,fechaFinal,horaIni,horaFin,soloFindes,amigosQuedada,"");
+                            postQuedadaFirebase(idSQL);
+
+                            mostrarListadoQuedadas(BD.mostrarQuedadas());
                         }
 
                     }
@@ -243,6 +276,13 @@ public class FragmentQuedadas extends Fragment {
                 .title("Añade un amigo")
                 .customView(R.layout.modal_ver_amigos, false) //true indica con ScrollView
                 .icon(getResources().getDrawable(R.drawable.grupos))
+                .negativeText("Atrás")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        addAmigosQuedada(new Amigo());
+                    }
+                })
                 .build();
 
         ArrayList<Amigo> friendsList = BD.mostrarAmigos();
@@ -266,4 +306,76 @@ public class FragmentQuedadas extends Fragment {
 
         showFriendsForQuedada.show();
     }
+
+
+    //----------------------- POST QUEDADA EN FIREBASE (REST) ---------------------
+
+    private void postQuedadaFirebase(final long idSQL) {
+
+        final BaseDatosUsuario BD = new BaseDatosUsuario(getContext());
+        Quedada q = BD.getQuedadaById(idSQL);
+
+        RestApiAdapter restApiAdapter = new RestApiAdapter();
+        Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
+
+        int solofinde = 0;
+        if (q.isSoloFinde()) {solofinde=1;}
+        Gson gson = new Gson();
+        String participantesString= gson.toJson(q.getParticipantes());
+
+        Call<QuedadaResponse> quedadaResponseCall = endpoints.registrarQuedada(q.getNombre(), q.getFechaIni(), q.getFechaFin(),
+                q.getHoraIni(),q.getHoraFin(),solofinde,participantesString);
+
+        quedadaResponseCall.enqueue(new Callback<QuedadaResponse>() {
+            @Override
+            public void onResponse(Call<QuedadaResponse> call, Response<QuedadaResponse> response) {
+                QuedadaResponse quedadaResponse = response.body();
+                Log.e("IdQuedada FIREBASE", quedadaResponse.getId());
+
+                BD.addIdFirebase(idSQL,quedadaResponse.getId()); //Guardo en mi bbdd sql el ID de Firebase
+
+                enviarNotifPushQuedada(idSQL, quedadaResponse.getId());
+            }
+            @Override
+            public void onFailure(Call<QuedadaResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    //----------------------- ENVIAR NOTIFICACION PUSH QUEDADA - FIREBASE CLOUD MESSAGING ------------------------
+
+    private void enviarNotifPushQuedada (final long idSQL, final String idFirebase) {
+
+        final BaseDatosUsuario BD = new BaseDatosUsuario(getContext());
+        ArrayList<Amigo> participantes = BD.getParticipantesQuedada(idSQL);
+
+        SharedPreferences prefs = getContext().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+        String emisor = prefs.getString("user","alguien");
+
+        for (Amigo p : participantes){ //mando notificacion push ha cada participante
+            notifPushQuedada(p.getId(),emisor,idFirebase);
+        }
+    }
+
+    private void notifPushQuedada(final String idReceptor,final String emisor,final String idQuedada) {
+
+        RestApiAdapter restApiAdapter = new RestApiAdapter();
+        Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
+        Call<UsuarioResponse> usuarioResponseCall = endpoints.pushQuedada(idReceptor, emisor, idQuedada);
+
+        usuarioResponseCall.enqueue(new Callback<UsuarioResponse>() {
+            @Override
+            public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
+                UsuarioResponse usuarioResponse1 = response.body();
+                Log.e("TOQUE ENVIADO A", usuarioResponse1.getNombre());
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
 }
