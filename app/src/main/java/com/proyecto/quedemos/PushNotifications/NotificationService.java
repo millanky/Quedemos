@@ -29,6 +29,7 @@ public class NotificationService extends FirebaseMessagingService {
         if (remoteMessage.getNotification().getTitle().equals("Quedemos!")) {  //UN TOQUE
 
             Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("toOpen", 2); //que abra el fragment Amigos
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
 
             String stringColor = remoteMessage.getNotification().getColor();
@@ -50,6 +51,8 @@ public class NotificationService extends FirebaseMessagingService {
         } else if (remoteMessage.getNotification().getTitle().equals("Inivitación quedada")) {  //NUEVA QUEDADA
 
             Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("toOpen", 1); //que abra el fragment quedadas
+            i.putExtra("idQuedada",""); //id de la quedada en Firebase
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
 
             String stringColor = remoteMessage.getNotification().getColor();

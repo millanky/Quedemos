@@ -77,7 +77,6 @@ public class FragmentCalendar extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        final View modalView = inflater.inflate(R.layout.modal_insertar_evento,container,false);
 
         final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 

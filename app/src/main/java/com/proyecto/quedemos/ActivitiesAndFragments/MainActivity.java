@@ -35,7 +35,6 @@ import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.RestAPI.Endpoints;
 import com.proyecto.quedemos.RestAPI.adapter.RestApiAdapter;
 import com.proyecto.quedemos.RestAPI.model.UsuarioResponse;
-import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.proyecto.quedemos.VisualResources.Utils;
 
 import retrofit2.Call;
@@ -50,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private String user;
     private Profile profile = null;
     private static SharedPreferences prefs;
+    private int toOpen = 0;
     private final Handler handler = new Handler();
 
     private PagerSlidingTabStrip tabs;
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             profile = (Profile) bundle.getParcelable(FacebookLoginFragment.PARCEL_KEY);
+            toOpen = bundle.getInt("toOpen",0);
         } else {
             profile = Profile.getCurrentProfile();
         }
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             adapter = new MyPagerAdapter(getSupportFragmentManager());
 
             pager.setAdapter(adapter);
+            pager.setCurrentItem(toOpen); //fragmente que se va a abrir(por defecto calendario)
 
             final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                     .getDisplayMetrics());
@@ -142,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ----------- LOGUEAR CON GMAIL -----------
-    public void sesionGmail(View view) {
+    // ----------- FUTURA IMPLEMENTACION: LOGUEAR CON GMAIL -----------
+   public void sesionGmail(View view) {
         Intent i = new Intent(this, GoogleSignInActivity.class);
         startActivity(i);
     }
@@ -151,8 +153,13 @@ public class MainActivity extends AppCompatActivity {
     // --------------------- GUARDAR TOKEN FIREBASE -----------------------
 
     public void enviarDatosUsuarioFirebase() {
-        //MIRAMOS SI YA HAY ALGUIEN EN LA BBDD CON ESE NOMBRE
-        userExists(prefs.getString("facebookId",""));
+
+        //MIRAMOS SI YA HAY ALGUIEN EN LA BBDD CON ESE NOMBRE SI ES LA PRIMERA VEZ QUE INICIO SESION
+        if (prefs.getString("databaseID","").equals("")) {
+            userExists(prefs.getString("facebookId", ""));
+        } else {
+            guardarActualizarToken();
+        }
     }
 
     public void guardarActualizarToken() {
@@ -362,6 +369,9 @@ public class MainActivity extends AppCompatActivity {
         public void unscheduleDrawable(Drawable who, Runnable what) {handler.removeCallbacks(what);}
     };
 
+
+    //---------------------- PAGE ADAPTER WITH TABS ----------------------------
+
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private final String[] TITLES = { "Calendario", "Quedadas", "Amigos"};
@@ -432,14 +442,14 @@ public class MainActivity extends AppCompatActivity {
             logout();
             return true;
         } else if (id == R.id.acerca){
-            Intent i = new Intent(this, AcercaDeActivity.class);
+            Intent i = new Intent(this, ActivityAcercaDe.class);
             startActivity(i);
         }
         else if (id == R.id.apariencia){
             cambiarApariencia();
         }
         else if (id == R.id.cuenta){
-            Intent i = new Intent(this, MiCuentaActivity.class);
+            Intent i = new Intent(this, ActivityMiCuenta.class);
             startActivity(i);
         }
 

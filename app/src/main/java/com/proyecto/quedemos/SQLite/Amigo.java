@@ -1,5 +1,7 @@
 package com.proyecto.quedemos.SQLite;
 
+import java.util.Comparator;
+
 /**
  * Created by MartaMillan on 24/7/16.
  */
@@ -40,4 +42,5 @@ public class Amigo {
     public void setId(String id) {
         this.id = id;
     }
+
 }

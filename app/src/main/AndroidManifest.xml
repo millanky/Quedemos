@@ -39,14 +39,14 @@
         </activity>
 
         <activity
-            android:name=".ActivitiesAndFragments.MiCuentaActivity"
+            android:name=".ActivitiesAndFragments.ActivityMiCuenta"
             android:configChanges="keyboardHidden|orientation"
             android:label="Mi cuenta"
             android:parentActivityName=".ActivitiesAndFragments.MainActivity">
         </activity>
 
         <activity
-            android:name=".ActivitiesAndFragments.AcercaDeActivity"
+            android:name=".ActivitiesAndFragments.ActivityAcercaDe"
             android:configChanges="keyboardHidden|orientation"
             android:label="Acerca de"
             android:parentActivityName=".ActivitiesAndFragments.MainActivity">

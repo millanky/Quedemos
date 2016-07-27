@@ -1,6 +1,7 @@
 package com.proyecto.quedemos.ActivitiesAndFragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import com.google.gson.Gson;
 import com.proyecto.quedemos.ArrayAdapters.AmigosAdapter;
 import com.proyecto.quedemos.ArrayAdapters.EventosAdapter;
 import com.proyecto.quedemos.ArrayAdapters.QuedadasAdapter;
+import com.proyecto.quedemos.Calendar.CaldroidCustomFragment;
 import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.RestAPI.Endpoints;
 import com.proyecto.quedemos.RestAPI.adapter.RestApiAdapter;
@@ -36,8 +39,15 @@ import com.proyecto.quedemos.SQLite.Amigo;
 import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.proyecto.quedemos.SQLite.Evento;
 import com.proyecto.quedemos.SQLite.Quedada;
+import com.roomorama.caldroid.CaldroidFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +62,10 @@ import retrofit2.Response;
 public class FragmentQuedadas extends Fragment {
 
     private ListView quedadasList;
+    private LinearLayout fragmentCalendar;
+    private FloatingActionButton addQ;
+    private FloatingActionButton back;
+    private CaldroidFragment caldroidFragment;
     private QuedadasAdapter qAdapter;
     private View positiveAction;
     private EditText fechaIni;
@@ -67,34 +81,65 @@ public class FragmentQuedadas extends Fragment {
     private ArrayList<Amigo> amigosQuedada;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-           View view = inflater.inflate(R.layout.fragment_quedada, container, false);
-
-        //MOSTRAR LISTADO QUEDADAS
-        BaseDatosUsuario BD = new BaseDatosUsuario(getContext());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState){
+        View view = inflater.inflate(R.layout.fragment_quedada, container, false);
         quedadasList = (ListView) view.findViewById(R.id.listQuedadas);
-        mostrarListadoQuedadas(BD.mostrarQuedadas());
+        addQ = (FloatingActionButton) view.findViewById(R.id.addQuedada);
+        back = (FloatingActionButton) view.findViewById(R.id.back);
+        fragmentCalendar = (LinearLayout) view.findViewById(R.id.quedadaCalendar);
 
-
-        quedadasList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int pos,long id) {
-
-                String amigo = qAdapter.getItem(pos).getNombre();
-                Toast.makeText(getContext(), "Amigo "+amigo, Toast.LENGTH_SHORT).show();
+        //Compruebo si me han invitado a alguna quedada
+        Bundle bundle = getActivity().getIntent().getExtras();
+        if (bundle != null) {
+            if (!bundle.getString("idQuedada","").equals("")){
+                //Guardar quedada
 
             }
-        });
+        }
 
+            //MOSTRAR LISTADO QUEDADAS
+        BaseDatosUsuario BD = new BaseDatosUsuario(getContext());
+        mostrarListadoQuedadas(BD.mostrarQuedadas());
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        //AÑADIR QUEDADA
+        addQ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               nuevaQuedada();
             }
 
+        });
+
+        //VISTA DE LISTADO
+        fragmentCalendar.setVisibility(View.GONE);
+        back.setVisibility(View.GONE);
+        addQ.setVisibility(View.VISIBLE);
+        quedadasList.setVisibility(View.VISIBLE);
+
+        //VER QUEDADA
+        quedadasList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int pos,long id) {
+
+                fragmentCalendar.setVisibility(View.VISIBLE);
+                back.setVisibility(View.VISIBLE);
+                addQ.setVisibility(View.GONE);
+                quedadasList.setVisibility(View.GONE);
+
+                crearCalendarioQuedada(savedInstanceState, qAdapter.getItem(pos));
+
+                back.setOnClickListener(new View.OnClickListener() { //VOLVER A VISTA DE LISTADO
+                    @Override
+                    public void onClick(View view) {
+                        fragmentCalendar.setVisibility(View.GONE);
+                        back.setVisibility(View.GONE);
+                        addQ.setVisibility(View.VISIBLE);
+                        quedadasList.setVisibility(View.VISIBLE);
+                    }
+                });
+
+            }
         });
 
         return  view;
@@ -103,7 +148,15 @@ public class FragmentQuedadas extends Fragment {
     //----------------------- ADAPTER * LISTAR QUEDADAS -----------------------
 
     public void mostrarListadoQuedadas (ArrayList<Quedada> listaQuedadas) {
-        qAdapter = new QuedadasAdapter(getContext(),R.layout.cell_quedada,listaQuedadas);
+
+        //Orden de la última añadida a la primera
+        ArrayList<Quedada> quedadasOrdenadas = new ArrayList<>();
+        ListIterator<Quedada> listIter = listaQuedadas.listIterator(listaQuedadas.size());
+        while (listIter.hasPrevious()) {
+            quedadasOrdenadas.add(listIter.previous());
+        }
+
+        qAdapter = new QuedadasAdapter(getContext(),R.layout.cell_quedada,quedadasOrdenadas);
         quedadasList.setAdapter(qAdapter);
     }
 
@@ -142,7 +195,7 @@ public class FragmentQuedadas extends Fragment {
         positiveAction = newQuedada.getActionButton(DialogAction.POSITIVE);
         nombreQuedada = (EditText) newQuedada.getCustomView().findViewById(R.id.nombre);
         fechaIni = (EditText) newQuedada.getCustomView().findViewById(R.id.inputFechaIni);
-        fechaFin = (EditText) newQuedada.getCustomView().findViewById(R.id.inputFechaIni);
+        fechaFin = (EditText) newQuedada.getCustomView().findViewById(R.id.inputFechaFin);
         soloFinde = (CheckBox) newQuedada.getCustomView().findViewById(R.id.checkFinde);
 
         nombreQuedada.addTextChangedListener(new TextWatcher() {
@@ -286,6 +339,7 @@ public class FragmentQuedadas extends Fragment {
                 .build();
 
         ArrayList<Amigo> friendsList = BD.mostrarAmigos();
+        Collections.sort(friendsList, new ComparadorAmigos());
         ListView friendsListView = (ListView) showFriendsForQuedada.getCustomView().findViewById(R.id.verAmigos);
         final AmigosAdapter amigosAdapter = new AmigosAdapter(getContext(), R.layout.cell_amigos, friendsList);
         friendsListView.setAdapter(amigosAdapter);
@@ -307,6 +361,12 @@ public class FragmentQuedadas extends Fragment {
         showFriendsForQuedada.show();
     }
 
+    class ComparadorAmigos implements Comparator<Amigo> {
+        @Override
+        public int compare(Amigo a1, Amigo a2) {
+            return a1.getNombre().compareTo(a2.getNombre());
+        }
+    }
 
     //----------------------- POST QUEDADA EN FIREBASE (REST) ---------------------
 
@@ -376,6 +436,83 @@ public class FragmentQuedadas extends Fragment {
 
             }
         });
+    }
+
+    //--------------------- FRAGMENT CALENDARIO QUEDADA * CALDROID -----------------------
+
+
+    private void crearCalendarioQuedada(Bundle savedInstanceState, Quedada quedada) {
+
+        final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        caldroidFragment = new CaldroidCustomFragment();
+
+        //Si se crea después de haber rotado
+        if (savedInstanceState != null) {
+            caldroidFragment.restoreStatesFromKey(savedInstanceState,
+                    "CALDROID_SAVED_STATE");
+        }
+        else {
+            Bundle args = new Bundle();
+            Calendar cal = Calendar.getInstance();
+            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+            args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+            args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
+            args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
+            args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
+            args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CaldroidDefault); //MI PROPIO THEME
+            caldroidFragment.setArguments(args);
+        }
+
+        setCustomResourceForDates(quedada);
+
+        android.support.v4.app.FragmentTransaction t = getFragmentManager().beginTransaction();
+        t.replace(R.id.quedadaCalendar, caldroidFragment);
+        t.commit();
+    }
+
+    private void setCustomResourceForDates(Quedada quedada) {
+        Calendar cal = Calendar.getInstance();
+
+        // Min date = fechaIni
+        String fIni = quedada.getFechaIni();
+        final String[] fechaIni = fIni.split("/");
+        cal.set(Integer.valueOf(fechaIni[2]),Integer.valueOf(fechaIni[1])-1,Integer.valueOf(fechaIni[0]));
+        Date minDate = cal.getTime();
+
+        // Max date = fechaFin
+        cal = Calendar.getInstance();
+        String fFin = quedada.getFechaFin();
+        final String[] fechaFin = fFin.split("/");
+        cal.set(Integer.valueOf(fechaFin[2]),Integer.valueOf(fechaFin[1])-1,Integer.valueOf(fechaFin[0]));
+        Date maxDate = cal.getTime();
+
+        // Set selected dates
+        // From Date
+       /* cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 2);
+        Date fromDate = cal.getTime();*/
+
+        // To Date
+       /* cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 3);
+        Date toDate = cal.getTime();*/
+
+        // Set disabled dates
+        ArrayList<Date> disabledDates = new ArrayList<Date>();
+        for (int i = 5; i < 8; i++) {
+            cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, i);
+            disabledDates.add(cal.getTime());
+        }
+
+        // Customize
+        caldroidFragment.setMinDate(minDate);
+        caldroidFragment.setMaxDate(maxDate);
+        caldroidFragment.setDisableDates(disabledDates);
+        //caldroidFragment.setSelectedDates(fromDate, toDate);
+        //caldroidFragment.setShowNavigationArrows(false);
+        //caldroidFragment.setEnableSwipe(false);
     }
 
 }

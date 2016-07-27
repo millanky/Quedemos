@@ -25,6 +25,8 @@ import com.proyecto.quedemos.SQLite.Amigo;
 import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,11 +86,18 @@ public class FragmentAmigos extends Fragment {
         return view;
     }
 
-    //****************** ADAPTER - LISTAR AMIGOS ****************//
+    //****************** ADAPTER - LISTAR AMIGOS ALFABÉTICAMENTE ****************//
 
     public void mostrarListadoAmigos (ArrayList<Amigo> listaAmigos) {
+        Collections.sort(listaAmigos, new ComparadorAmigos());
         aAdapter = new AmigosAdapter(getContext(),R.layout.cell_amigos,listaAmigos);
         listadoAmigos.setAdapter(aAdapter);
+    }
+    class ComparadorAmigos implements Comparator<Amigo> {
+        @Override
+        public int compare(Amigo a1, Amigo a2) {
+            return a1.getNombre().compareTo(a2.getNombre());
+        }
     }
 
     //************************** MODAL VIEWS ****************************//
@@ -199,13 +208,21 @@ public class FragmentAmigos extends Fragment {
         usuarioResponseCall.enqueue(new Callback<UsuarioResponse>() {
             @Override
             public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
-                UsuarioResponse usuarioResponse1 = response.body();
-                Log.e("TOQUE ENVIADO A", usuarioResponse1.getNombre());
+                if (response.body() != null) {
+                    UsuarioResponse usuarioResponse1 = response.body();
+                    Log.e("TOQUE ENVIADO A", usuarioResponse1.getNombre());
+                    Toast.makeText(getContext(), "Toque enviado a "+usuarioResponse1.getNombre(),
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "Ha habido un problema con el servidor, inténtalo más tarde",
+                            Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
             public void onFailure(Call<UsuarioResponse> call, Throwable t) {
-
+                Toast.makeText(getContext(), "Ha habido un problema con el servidor, inténtalo más tarde",
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -20,7 +20,7 @@ import com.proyecto.quedemos.VisualResources.Utils;
 /**
  * Created by MartaMillan on 25/7/16.
  */
-public class AcercaDeActivity extends AppCompatActivity{
+public class ActivityAcercaDe extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

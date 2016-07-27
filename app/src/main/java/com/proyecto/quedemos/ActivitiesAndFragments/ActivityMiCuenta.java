@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by MartaMillan on 23/7/16.
  */
-public class MiCuentaActivity extends AppCompatActivity {
+public class ActivityMiCuenta extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

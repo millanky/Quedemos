@@ -47,7 +47,7 @@ public class SplashScreen extends AppCompatActivity {
 
             public void run() {
                 try {
-                    sleep(1500); //se duerme 3 segundos, doy tiempo a recuperar Token
+                    sleep(500); //se duerme 0,5 segundos, doy tiempo a cargar calendario
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }finally { //lanzar la MainActivity
