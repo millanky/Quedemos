@@ -73,10 +73,14 @@ public class MainActivity extends AppCompatActivity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             profile = (Profile) bundle.getParcelable(FacebookLoginFragment.PARCEL_KEY);
             toOpen = bundle.getInt("toOpen",0);
+            prefs.edit().putString("newQuedada",bundle.getString("idQuedada","")).commit();
+
         } else {
             profile = Profile.getCurrentProfile();
         }
@@ -92,9 +96,8 @@ public class MainActivity extends AppCompatActivity {
             tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
             pager = (ViewPager) findViewById(R.id.pager);
             adapter = new MyPagerAdapter(getSupportFragmentManager());
-
             pager.setAdapter(adapter);
-            pager.setCurrentItem(toOpen); //fragmente que se va a abrir(por defecto calendario)
+            pager.setCurrentItem(toOpen); //fragment que se va a abrir(por defecto calendario)
 
             final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                     .getDisplayMetrics());
@@ -125,10 +128,17 @@ public class MainActivity extends AppCompatActivity {
                 layoutContainer.setBackground(getResources().getDrawable(R.drawable.bg_azuloscuro));
             }
         }
+    }
 
-/*
-           // new downloadTask().execute(picture);
-        }*/
+    @Override
+    protected void onNewIntent(Intent intent){
+        super.onNewIntent(intent);
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            toOpen = bundle.getInt("toOpen", 0);
+            pager.setCurrentItem(toOpen);
+            prefs.edit().putString("newQuedada",bundle.getString("idQuedada","")).commit();
+        }
     }
 
     //------------- COMPROBAR SI EL USUARIO ESTA LOGUEADO  --------

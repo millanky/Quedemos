@@ -41,6 +41,7 @@ import com.proyecto.quedemos.SQLite.Evento;
 import com.proyecto.quedemos.SQLite.Quedada;
 import com.roomorama.caldroid.CaldroidFragment;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -89,15 +90,14 @@ public class FragmentQuedadas extends Fragment {
         fragmentCalendar = (LinearLayout) view.findViewById(R.id.quedadaCalendar);
 
         //Compruebo si me han invitado a alguna quedada
-        Bundle bundle = getActivity().getIntent().getExtras();
-        if (bundle != null) {
-            if (!bundle.getString("idQuedada","").equals("")){
-                //Guardar quedada
-
-            }
+        SharedPreferences prefs = getActivity().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+        String idQuedadaNueva = prefs.getString("newQuedada","");
+        if(!idQuedadaNueva.equals("")){
+            buscarQuedada(idQuedadaNueva);
+            prefs.edit().putString("newQuedada",""); //vuelvo a poner a cero
         }
 
-            //MOSTRAR LISTADO QUEDADAS
+        //MOSTRAR LISTADO QUEDADAS
         BaseDatosUsuario BD = new BaseDatosUsuario(getContext());
         mostrarListadoQuedadas(BD.mostrarQuedadas());
 
@@ -122,7 +122,6 @@ public class FragmentQuedadas extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int pos,long id) {
 
-                fragmentCalendar.setVisibility(View.VISIBLE);
                 back.setVisibility(View.VISIBLE);
                 addQ.setVisibility(View.GONE);
                 quedadasList.setVisibility(View.GONE);
@@ -143,6 +142,21 @@ public class FragmentQuedadas extends Fragment {
         });
 
         return  view;
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) { //fragmento seleccionado en el viewpager
+        super.setMenuVisibility(visible);
+        if (visible) {
+            Log.e("QUEDADAS","VISIBLE");
+            //Compruebo si me han invitado a alguna quedada
+            SharedPreferences prefs = getActivity().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+            String idQuedadaNueva = prefs.getString("newQuedada","");
+            if(!idQuedadaNueva.equals("")){
+                buscarQuedada(idQuedadaNueva);
+                prefs.edit().putString("newQuedada","").commit(); //vuelvo a poner a cero
+            }
+        }
     }
 
     //----------------------- ADAPTER * LISTAR QUEDADAS -----------------------
@@ -168,6 +182,7 @@ public class FragmentQuedadas extends Fragment {
         horaIni = "09:00";
         horaFin = "11:00";
         amigosQuedada = new ArrayList<Amigo>();
+        final String dateFormat = "dd/MM/yyyy";
 
         MaterialDialog newQuedada = new MaterialDialog.Builder(getContext())
                 .title("Nueva quedada")
@@ -204,8 +219,8 @@ public class FragmentQuedadas extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 positiveAction.setEnabled(nombreQuedada.getText().toString().length()>0
-                        && fechaIni.getText().toString().length()>0
-                        && fechaFin.getText().toString().length()>0);
+                        && validDateFormat(dateFormat,fechaIni.getText().toString())
+                        && validDateFormat(dateFormat,fechaFin.getText().toString()));
             }
             @Override
             public void afterTextChanged(Editable editable) {  }
@@ -216,8 +231,10 @@ public class FragmentQuedadas extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 positiveAction.setEnabled(nombreQuedada.getText().toString().length()>0
-                        && fechaIni.getText().toString().length()>0
-                        && fechaFin.getText().toString().length()>0);
+                        && validDateFormat(dateFormat,fechaIni.getText().toString())
+                        && validDateFormat(dateFormat,fechaFin.getText().toString()));
+                       // && fechaIni.getText().toString().length()>0
+                        //&& fechaFin.getText().toString().length()>0);
             }
             @Override
             public void afterTextChanged(Editable editable) {  }
@@ -228,8 +245,8 @@ public class FragmentQuedadas extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 positiveAction.setEnabled(nombreQuedada.getText().toString().length()>0
-                        && fechaIni.getText().toString().length()>0
-                        && fechaFin.getText().toString().length()>0);
+                        && validDateFormat(dateFormat,fechaIni.getText().toString())
+                        && validDateFormat(dateFormat,fechaFin.getText().toString()));
             }
             @Override
             public void afterTextChanged(Editable editable) {  }
@@ -414,7 +431,7 @@ public class FragmentQuedadas extends Fragment {
         String emisor = prefs.getString("user","alguien");
 
         for (Amigo p : participantes){ //mando notificacion push ha cada participante
-            notifPushQuedada(p.getId(),emisor,idFirebase);
+            notifPushQuedada(p.getId(),emisor,idFirebase); //TODO: excluir al propio usuario
         }
     }
 
@@ -438,12 +455,41 @@ public class FragmentQuedadas extends Fragment {
         });
     }
 
+    //--------------------- RECUPERAR DATOS QUEDADA - FIREBASE --------------------------
+
+    private void buscarQuedada (String idFirebase) {
+
+        RestApiAdapter restApiAdapter = new RestApiAdapter();
+        Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
+        Call<QuedadaResponse> quedadaResponseCall = endpoints.buscarQuedada(idFirebase);
+
+        quedadaResponseCall.enqueue(new Callback<QuedadaResponse>() {
+            @Override
+            public void onResponse(Call<QuedadaResponse> call, Response<QuedadaResponse> response) {
+                QuedadaResponse quedadaResponse = response.body();
+
+                if (response.body() != null){ //Guardamos en la bdd de amigos
+
+                    Log.e("QUEDADA",quedadaResponse.getNombre());
+                    //TODO: guardar quedada en BBDD
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuedadaResponse> call, Throwable t) {
+            }
+        });
+    }
+
     //--------------------- FRAGMENT CALENDARIO QUEDADA * CALDROID -----------------------
 
 
     private void crearCalendarioQuedada(Bundle savedInstanceState, Quedada quedada) {
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String fIni = quedada.getFechaIni();
+        final String[] fechaIni = fIni.split("/");
+        String fFin = quedada.getFechaFin();
+        final String[] fechaFin = fFin.split("/");
 
         caldroidFragment = new CaldroidCustomFragment();
 
@@ -455,64 +501,51 @@ public class FragmentQuedadas extends Fragment {
         else {
             Bundle args = new Bundle();
             Calendar cal = Calendar.getInstance();
-            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-            args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+            args.putInt(CaldroidFragment.MONTH,Integer.valueOf(fechaIni[1]));
+            args.putInt(CaldroidFragment.YEAR, Integer.valueOf(fechaIni[2]));
             args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
-            args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CaldroidDefault); //MI PROPIO THEME
+            args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CaldroidDefault);
             caldroidFragment.setArguments(args);
         }
 
-        setCustomResourceForDates(quedada);
-
-        android.support.v4.app.FragmentTransaction t = getFragmentManager().beginTransaction();
-        t.replace(R.id.quedadaCalendar, caldroidFragment);
-        t.commit();
-    }
-
-    private void setCustomResourceForDates(Quedada quedada) {
+        //Customizamos las fechas disponibles
         Calendar cal = Calendar.getInstance();
 
         // Min date = fechaIni
-        String fIni = quedada.getFechaIni();
-        final String[] fechaIni = fIni.split("/");
         cal.set(Integer.valueOf(fechaIni[2]),Integer.valueOf(fechaIni[1])-1,Integer.valueOf(fechaIni[0]));
         Date minDate = cal.getTime();
 
         // Max date = fechaFin
         cal = Calendar.getInstance();
-        String fFin = quedada.getFechaFin();
-        final String[] fechaFin = fFin.split("/");
         cal.set(Integer.valueOf(fechaFin[2]),Integer.valueOf(fechaFin[1])-1,Integer.valueOf(fechaFin[0]));
         Date maxDate = cal.getTime();
 
-        // Set selected dates
-        // From Date
-       /* cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 2);
-        Date fromDate = cal.getTime();*/
-
-        // To Date
-       /* cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 3);
-        Date toDate = cal.getTime();*/
-
-        // Set disabled dates
-        ArrayList<Date> disabledDates = new ArrayList<Date>();
-        for (int i = 5; i < 8; i++) {
-            cal = Calendar.getInstance();
-            cal.add(Calendar.DATE, i);
-            disabledDates.add(cal.getTime());
-        }
-
-        // Customize
         caldroidFragment.setMinDate(minDate);
         caldroidFragment.setMaxDate(maxDate);
-        caldroidFragment.setDisableDates(disabledDates);
-        //caldroidFragment.setSelectedDates(fromDate, toDate);
-        //caldroidFragment.setShowNavigationArrows(false);
-        //caldroidFragment.setEnableSwipe(false);
+
+
+        android.support.v4.app.FragmentTransaction t = getFragmentManager().beginTransaction();
+        t.replace(R.id.quedadaCalendar, caldroidFragment);
+        t.commit();
+
+        fragmentCalendar.setVisibility(View.VISIBLE);
     }
+
+    public static boolean validDateFormat(String format, String value) {
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return date != null;
+    }
+
 
 }

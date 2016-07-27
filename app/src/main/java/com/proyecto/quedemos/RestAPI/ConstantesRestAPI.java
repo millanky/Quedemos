@@ -11,6 +11,7 @@ public final class ConstantesRestAPI {
     public static final String KEY_FIND_SELF_USER = "find-self/{facebookid}";
     public static final String KEY_TOQUE_AMIGO = "toque-amigo/{id}/{nombre}";
     public static final String KEY_POST_QUEDADA = "quedadas/";
+    public static final String KEY_FIND_QUEDADA = "find-quedada/{id}";
     public static final String KEY_PUSH_QUEDADA = "quedada-push/{id}/{nombre}/{idquedada}";
     //public static final String KEY_TOQUE_ANIMAL = "toque-animal/{id}/{animal}"; //enviar parametro sobre la url
 }

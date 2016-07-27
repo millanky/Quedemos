@@ -38,6 +38,9 @@ public interface Endpoints {
     @GET(ConstantesRestAPI.KEY_TOQUE_AMIGO)
     Call<UsuarioResponse> toqueAmigo (@Path("id") String id, @Path("nombre") String nombre);
 
+    @GET(ConstantesRestAPI.KEY_FIND_QUEDADA)
+    Call<QuedadaResponse> buscarQuedada (@Path("id") String id);
+
     @GET(ConstantesRestAPI.KEY_PUSH_QUEDADA)
     Call<UsuarioResponse> pushQuedada (@Path("id") String id, @Path("nombre") String nombre, @Path("idquedada") String idquedada);
 

@@ -52,7 +52,8 @@ public class NotificationService extends FirebaseMessagingService {
 
             Intent i = new Intent(this, MainActivity.class);
             i.putExtra("toOpen", 1); //que abra el fragment quedadas
-            i.putExtra("idQuedada",""); //id de la quedada en Firebase
+            String idquedada = remoteMessage.getData().get("idquedada");
+            i.putExtra("idQuedada",idquedada); //id de la quedada en Firebase
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
 
             String stringColor = remoteMessage.getNotification().getColor();
