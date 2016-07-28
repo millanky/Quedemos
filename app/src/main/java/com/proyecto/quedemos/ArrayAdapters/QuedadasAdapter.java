@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,7 +50,7 @@ public class QuedadasAdapter extends ArrayAdapter<Quedada> {
             fechas.setText(getItem(pos).getFechaIni() + " al " + getItem(pos).getFechaFin());
         }
 
-        numParticipantes.setText(getItem(pos).getParticipantes().size() + " participantes");
+        numParticipantes.setText(getItem(pos).getParticipantes().size() + " partic.");
 
         return row;
 

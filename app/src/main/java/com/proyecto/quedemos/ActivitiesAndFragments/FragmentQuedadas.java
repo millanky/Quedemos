@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -66,13 +67,14 @@ public class FragmentQuedadas extends Fragment {
     private LinearLayout fragmentCalendar;
     private FloatingActionButton addQ;
     private FloatingActionButton back;
-    private CaldroidFragment caldroidFragment;
+    private Button verParticipantes;
     private QuedadasAdapter qAdapter;
     private View positiveAction;
     private EditText fechaIni;
     private EditText fechaFin;
     private CheckBox soloFinde;
     private EditText nombreQuedada;
+    private TextView tituloQuedada;
     private String nombreQ;
     private String horaIni;
     private String horaFin;
@@ -88,14 +90,8 @@ public class FragmentQuedadas extends Fragment {
         addQ = (FloatingActionButton) view.findViewById(R.id.addQuedada);
         back = (FloatingActionButton) view.findViewById(R.id.back);
         fragmentCalendar = (LinearLayout) view.findViewById(R.id.quedadaCalendar);
-
-        //Compruebo si me han invitado a alguna quedada
-        SharedPreferences prefs = getActivity().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
-        String idQuedadaNueva = prefs.getString("newQuedada","");
-        if(!idQuedadaNueva.equals("")){
-            buscarQuedada(idQuedadaNueva);
-            prefs.edit().putString("newQuedada",""); //vuelvo a poner a cero
-        }
+        tituloQuedada = (TextView) view.findViewById(R.id.tituloQuedada);
+        verParticipantes = (Button) view.findViewById(R.id.btnVerParticipantes);
 
         //MOSTRAR LISTADO QUEDADAS
         BaseDatosUsuario BD = new BaseDatosUsuario(getContext());
@@ -113,6 +109,8 @@ public class FragmentQuedadas extends Fragment {
         //VISTA DE LISTADO
         fragmentCalendar.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
+        tituloQuedada.setVisibility(View.GONE);
+        verParticipantes.setVisibility(View.GONE);
         addQ.setVisibility(View.VISIBLE);
         quedadasList.setVisibility(View.VISIBLE);
 
@@ -120,19 +118,34 @@ public class FragmentQuedadas extends Fragment {
         quedadasList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View v, int pos,long id) {
+            public void onItemClick(AdapterView<?> parent, View v, final int pos,long id) {
+
+                tituloQuedada.setText(qAdapter.getItem(pos).getNombre());
 
                 back.setVisibility(View.VISIBLE);
+                tituloQuedada.setVisibility(View.VISIBLE);
+                verParticipantes.setVisibility(View.VISIBLE);
                 addQ.setVisibility(View.GONE);
                 quedadasList.setVisibility(View.GONE);
 
-                crearCalendarioQuedada(savedInstanceState, qAdapter.getItem(pos));
+                customizarCalendarioQuedada(savedInstanceState, qAdapter.getItem(pos));
 
+                //VER PARTICIPANTES
+                verParticipantes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mostrarParticipantes(qAdapter.getItem(pos).getParticipantes());
+                    }
+                });
+
+                //VOLVER AL LISTADO
                 back.setOnClickListener(new View.OnClickListener() { //VOLVER A VISTA DE LISTADO
                     @Override
                     public void onClick(View view) {
                         fragmentCalendar.setVisibility(View.GONE);
                         back.setVisibility(View.GONE);
+                        tituloQuedada.setVisibility(View.GONE);
+                        verParticipantes.setVisibility(View.GONE);
                         addQ.setVisibility(View.VISIBLE);
                         quedadasList.setVisibility(View.VISIBLE);
                     }
@@ -140,7 +153,6 @@ public class FragmentQuedadas extends Fragment {
 
             }
         });
-
         return  view;
     }
 
@@ -148,14 +160,17 @@ public class FragmentQuedadas extends Fragment {
     public void setMenuVisibility(final boolean visible) { //fragmento seleccionado en el viewpager
         super.setMenuVisibility(visible);
         if (visible) {
-            Log.e("QUEDADAS","VISIBLE");
-            //Compruebo si me han invitado a alguna quedada
-            SharedPreferences prefs = getActivity().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
-            String idQuedadaNueva = prefs.getString("newQuedada","");
-            if(!idQuedadaNueva.equals("")){
-                buscarQuedada(idQuedadaNueva);
-                prefs.edit().putString("newQuedada","").commit(); //vuelvo a poner a cero
-            }
+            Log.e("QUEDADAS","VISIBLE"); //Vuelvo al listado
+            fragmentCalendar.setVisibility(View.GONE);
+            back.setVisibility(View.GONE);
+            tituloQuedada.setVisibility(View.GONE);
+            verParticipantes.setVisibility(View.GONE);
+            addQ.setVisibility(View.VISIBLE);
+            quedadasList.setVisibility(View.VISIBLE);
+
+            //Actualizo por si ha habido cambios
+            BaseDatosUsuario BD = new BaseDatosUsuario(getActivity().getApplicationContext());
+            mostrarListadoQuedadas(BD.mostrarQuedadas());
         }
     }
 
@@ -385,6 +400,25 @@ public class FragmentQuedadas extends Fragment {
         }
     }
 
+    //----------------------- MODAL VIEW * MOSTRAR PARTICIPANTES -----------------------
+
+    public void mostrarParticipantes(ArrayList<Amigo> participantesList) {
+
+        final MaterialDialog showParticipants = new MaterialDialog.Builder(getContext())
+                .title("Añade un amigo")
+                .customView(R.layout.modal_ver_amigos, false) //true indica con ScrollView
+                .icon(getResources().getDrawable(R.drawable.grupos))
+                .positiveText("Atrás")
+                .build();
+
+        ListView friendsListView = (ListView) showParticipants.getCustomView().findViewById(R.id.verAmigos);
+        final AmigosAdapter amigosAdapter = new AmigosAdapter(getContext(), R.layout.cell_amigos, participantesList);
+        friendsListView.setAdapter(amigosAdapter);
+
+
+        showParticipants.show();
+    }
+
     //----------------------- POST QUEDADA EN FIREBASE (REST) ---------------------
 
     private void postQuedadaFirebase(final long idSQL) {
@@ -455,43 +489,17 @@ public class FragmentQuedadas extends Fragment {
         });
     }
 
-    //--------------------- RECUPERAR DATOS QUEDADA - FIREBASE --------------------------
-
-    private void buscarQuedada (String idFirebase) {
-
-        RestApiAdapter restApiAdapter = new RestApiAdapter();
-        Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
-        Call<QuedadaResponse> quedadaResponseCall = endpoints.buscarQuedada(idFirebase);
-
-        quedadaResponseCall.enqueue(new Callback<QuedadaResponse>() {
-            @Override
-            public void onResponse(Call<QuedadaResponse> call, Response<QuedadaResponse> response) {
-                QuedadaResponse quedadaResponse = response.body();
-
-                if (response.body() != null){ //Guardamos en la bdd de amigos
-
-                    Log.e("QUEDADA",quedadaResponse.getNombre());
-                    //TODO: guardar quedada en BBDD
-                }
-            }
-
-            @Override
-            public void onFailure(Call<QuedadaResponse> call, Throwable t) {
-            }
-        });
-    }
-
     //--------------------- FRAGMENT CALENDARIO QUEDADA * CALDROID -----------------------
 
 
-    private void crearCalendarioQuedada(Bundle savedInstanceState, Quedada quedada) {
+    private void customizarCalendarioQuedada(Bundle savedInstanceState, Quedada quedada) {
 
         String fIni = quedada.getFechaIni();
         final String[] fechaIni = fIni.split("/");
         String fFin = quedada.getFechaFin();
         final String[] fechaFin = fFin.split("/");
 
-        caldroidFragment = new CaldroidCustomFragment();
+        CaldroidFragment caldroidFragment = new CaldroidCustomFragment();
 
         //Si se crea después de haber rotado
         if (savedInstanceState != null) {

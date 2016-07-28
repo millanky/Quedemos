@@ -12,6 +12,7 @@
     <color name="white">#ffffff</color>
     <color name="translucentWhite">#66ffffff</color>
     <color name="translucentPrimaryDark">#66303F9F</color>
+    <color name="translucentSoftPrimaryDark">#1A303F9F</color>
 
     <color name="calendar_base">#F2F3FA</color>
 

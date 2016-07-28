@@ -9,7 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="70dp"/>
+        android:layout_marginTop="60dp"
+        android:dividerHeight="15dp"
+        android:divider="@android:color/transparent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addQuedada"
@@ -20,11 +22,40 @@
         android:src="@android:drawable/ic_input_add"
         android:baselineAlignBottom="true"
         android:clickable="true"
-        android:tint="@android:color/white"/>
+        android:tint="@android:color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tituloQuedada"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingTop="15dp"
+            android:paddingBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"
+            android:textSize="30sp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnVerParticipantes"
+            android:text="@string/ver_paticipantes"
+            android:layout_alignBottom="@+id/tituloQuedada"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/translucentSoftPrimaryDark"/>
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/quedadaCalendar"
-        android:visibility="gone"
+        android:layout_marginTop="60dp"
         android:paddingTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +64,6 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/back"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

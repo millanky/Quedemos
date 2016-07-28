@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/translucentSoftPrimaryDark"
+    android:layout_marginBottom="10dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,6 +13,7 @@
         android:id="@+id/nombreQuedada"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
         android:text="Cena trabajo"/>
     <TextView
         android:layout_width="wrap_content"
@@ -28,6 +30,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:src="@android:drawable/ic_menu_my_calendar"
         android:tint="@color/colorPrimaryDark"
         android:layout_below="@+id/nombreQuedada"
@@ -42,8 +45,9 @@
         android:layout_toEndOf="@+id/iconoCal" />
 
     <ImageView
-        android:layout_width="18dp"
+        android:layout_width="38dp"
         android:layout_height="18dp"
+        android:paddingLeft="20dp"
         android:src="@drawable/clock"
         android:tint="@color/translucentPrimaryDark"
         android:layout_marginLeft="6dp"
@@ -63,6 +67,17 @@
         android:paddingLeft="10dp"
         android:text="11:00 - 12:00"
         android:id="@+id/horas"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/write"
+        android:layout_below="@+id/numParticipantes"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/borrarQuedada"/>
 
 
 </android.support.percent.PercentRelativeLayout>

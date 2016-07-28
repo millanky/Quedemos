@@ -29,13 +29,21 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.proyecto.quedemos.InicioSesion.FacebookLoginFragment;
 import com.proyecto.quedemos.InicioSesion.GoogleSignInActivity;
 import com.proyecto.quedemos.R;
 import com.proyecto.quedemos.RestAPI.Endpoints;
 import com.proyecto.quedemos.RestAPI.adapter.RestApiAdapter;
+import com.proyecto.quedemos.RestAPI.model.QuedadaResponse;
 import com.proyecto.quedemos.RestAPI.model.UsuarioResponse;
+import com.proyecto.quedemos.SQLite.Amigo;
+import com.proyecto.quedemos.SQLite.BaseDatosUsuario;
 import com.proyecto.quedemos.VisualResources.Utils;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +55,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private String user;
-    private Profile profile = null;
     private static SharedPreferences prefs;
     private int toOpen = 0;
     private final Handler handler = new Handler();
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private Drawable oldBackground = null;
     private int currentColor; //0xFF666666;
     private MaterialDialog cambiarColorDialog;
+    private MaterialDialog dialogBuscando;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Utils.onActivityCreateSetTheme(this);
-        construirDialogoApariencia();
+        construirDialogoApariencia(); //Crear ventana modal de apariencia
+        buscando(); //Crear ventana modal de busqueda
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.q_logo);
@@ -74,13 +83,11 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
 
-
         Bundle bundle = getIntent().getExtras();
+        Profile profile = null;
         if (bundle != null) {
             profile = (Profile) bundle.getParcelable(FacebookLoginFragment.PARCEL_KEY);
             toOpen = bundle.getInt("toOpen",0);
-            prefs.edit().putString("newQuedada",bundle.getString("idQuedada","")).commit();
-
         } else {
             profile = Profile.getCurrentProfile();
         }
@@ -131,13 +138,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent){
+    protected void onNewIntent(Intent intent){//Recojo los datos de las Notificaciones push
         super.onNewIntent(intent);
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             toOpen = bundle.getInt("toOpen", 0);
-            pager.setCurrentItem(toOpen);
-            prefs.edit().putString("newQuedada",bundle.getString("idQuedada","")).commit();
+            if (toOpen == 1) {
+                String idQ = bundle.getString("idQuedada","");
+                dialogBuscando.show();
+                buscarQuedada(idQ);
+            } else {
+                pager.setCurrentItem(toOpen);
+            }
         }
     }
 
@@ -272,6 +284,55 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //--------------------- RECUPERAR DATOS QUEDADA - FIREBASE --------------------------
+
+    private void buscarQuedada (final String idFirebase) {
+
+        RestApiAdapter restApiAdapter = new RestApiAdapter();
+        Endpoints endpoints = restApiAdapter.establecerConexionRestAPI();
+        Call<QuedadaResponse> quedadaResponseCall = endpoints.buscarQuedada(idFirebase);
+
+        quedadaResponseCall.enqueue(new Callback<QuedadaResponse>() {
+            @Override
+            public void onResponse(Call<QuedadaResponse> call, Response<QuedadaResponse> response) {
+                QuedadaResponse qRes = response.body();
+
+                if (response.body() != null){ //Guardamos en la bdd de amigos
+
+                    Log.e("QUEDADA",qRes.getNombre());
+
+                    BaseDatosUsuario BD = new BaseDatosUsuario(getApplicationContext());
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<ArrayList<Amigo>>() {}.getType();
+                    ArrayList<Amigo> amigosParticipantes = gson.fromJson(qRes.getParticipantes(),type);
+                    BD.nuevaQuedada(qRes.getNombre(),qRes.getFechaini(),qRes.getFechafin(),qRes.getHoraini(),qRes.getHorafin(),qRes.getSolofinde(),amigosParticipantes,idFirebase);
+                    pager.setCurrentItem(toOpen);
+                    dialogBuscando.dismiss();
+                    Toast.makeText(getApplicationContext(), "Se ha añadido la quedada "+qRes.getNombre(), Toast.LENGTH_SHORT).show();
+
+                } else {
+                    dialogBuscando.dismiss();
+                    Toast.makeText(getApplicationContext(), "Ha habido un problema con el servidor", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuedadaResponse> call, Throwable t) {
+                dialogBuscando.dismiss();
+                Toast.makeText(getApplicationContext(), "Ha habido un problema con el servidor", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //---------------------------- MODAL BUSCANDO ---------------------------
+    public void buscando(){
+
+        dialogBuscando = new MaterialDialog.Builder(this)
+                .title("Añadiendo quedada")
+                .content("Esta acción puede tardar unos segundos")
+                .progress(true, 0)
+                .build();
+    }
 
     //------------------- C A M B I A R  C O L O R ----------------
 
