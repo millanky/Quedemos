@@ -36,18 +36,19 @@
             android:paddingBottom="5dp"
             android:layout_marginLeft="20dp"
             android:textStyle="bold"
-            android:textSize="30sp" />
+            android:textSize="22sp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnVerParticipantes"
             android:text="@string/ver_paticipantes"
+            android:textSize="12sp"
             android:layout_alignBottom="@+id/tituloQuedada"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingRight="5dp"
             android:layout_marginRight="20dp"
             android:background="@color/translucentSoftPrimaryDark"/>
     </RelativeLayout>

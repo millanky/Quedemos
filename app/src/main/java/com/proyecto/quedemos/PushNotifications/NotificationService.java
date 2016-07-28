@@ -47,7 +47,7 @@ public class NotificationService extends FirebaseMessagingService {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0,notificacion.build());
 
-        } else if (remoteMessage.getNotification().getTitle().equals("Inivitación quedada")) {  //NUEVA QUEDADA
+        } else if (remoteMessage.getNotification().getTitle().equals("Invitación quedada")) {  //NUEVA QUEDADA
 
             Intent i = new Intent(this, MainActivity.class);
             i.putExtra("toOpen", 1); //que abra el fragment quedadas

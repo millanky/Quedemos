@@ -405,7 +405,7 @@ public class FragmentQuedadas extends Fragment {
     public void mostrarParticipantes(ArrayList<Amigo> participantesList) {
 
         final MaterialDialog showParticipants = new MaterialDialog.Builder(getContext())
-                .title("Añade un amigo")
+                .title("Participantes")
                 .customView(R.layout.modal_ver_amigos, false) //true indica con ScrollView
                 .icon(getResources().getDrawable(R.drawable.grupos))
                 .positiveText("Atrás")
