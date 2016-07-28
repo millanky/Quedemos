@@ -464,8 +464,10 @@ public class FragmentQuedadas extends Fragment {
         SharedPreferences prefs = getContext().getSharedPreferences("Usuario", Context.MODE_PRIVATE);
         String emisor = prefs.getString("user","alguien");
 
-        for (Amigo p : participantes){ //mando notificacion push ha cada participante
-            notifPushQuedada(p.getId(),emisor,idFirebase); //TODO: excluir al propio usuario
+        for (Amigo p : participantes){ //mando notificacion push ha cada participante excepto al usuario creador
+            if (!p.getNombre().equals(emisor)) {
+                notifPushQuedada(p.getId(), emisor, idFirebase);
+            }
         }
     }
 

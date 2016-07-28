@@ -29,7 +29,7 @@
 
 
 
-        <!-- ".InicioSesion.ChooserActivity" -->
+        <!-- ACTIVITIES -->
         <activity
             android:name=".ActivitiesAndFragments.MainActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -64,11 +64,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity
-            android:name=".SinUso.FacebookLoginActivity"
-            android:label="@string/label_facebook_login" />
 
-        <!-- GOOGLE -->
+        <!-- GOOGLE - FUTURA IMPLEMENTACION -->
         <activity
             android:name=".InicioSesion.GoogleSignInActivity"
             android:label="@string/label_google_sign_in" />
@@ -86,14 +83,6 @@
             </intent-filter>
         </service>
 
-        <!-- <activity android:name=".SinUso.PagerTabActivity"
-            android:label="Pager" />-->
-
-        <!-- EMAIL
-        <activity
-            android:name=".SinUso.EmailPasswordActivity"
-            android:label="@string/label_emailpassword"
-            android:windowSoftInputMode="stateAlwaysHidden" />-->
     </application>
 
 </manifest>
