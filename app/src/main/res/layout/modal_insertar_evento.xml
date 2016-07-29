@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:minLines="1"
         android:id="@+id/nombre"
-        android:hint="Nombre del evento"
-        android:layout_below="@+id/listEventosDia"/>
+        android:hint="Nombre del evento"/>
 
     <TextView
         android:layout_width="match_parent"
